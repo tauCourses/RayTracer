@@ -10,7 +10,19 @@ public class Sphere extends AbstractSurface{
 
 	@Override
 	public Point intersectes(Vector v) {
-		return null;
+		float a = v.direction.x*v.direction.x + v.direction.y*v.direction.y + v.direction.z*v.direction.z;
+		float b = 2*(	v.direction.x*(v.origin.x-this.center.x) + 
+						v.direction.y*(v.origin.y-this.center.y) + 
+						v.direction.z*(v.origin.z-this.center.z) );
+		float c = 	(v.origin.x-this.center.x)*(v.origin.x-this.center.x) +
+					(v.origin.y-this.center.y)*(v.origin.y-this.center.y) +
+					(v.origin.y-this.center.y)*(v.origin.y-this.center.y);
+		float determinante = b*b-4*a*c;
+		if(determinante<0)
+			return null;
+		
+		float d = (float) ((-b - Math.sqrt(determinante))/2);
+		return v.origin.add(v.direction.scalarMultiplication(d));
 	}
 
 }

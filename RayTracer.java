@@ -24,7 +24,6 @@ public class RayTracer {
 	 * Runs the ray tracer. Takes scene file, output image file and image size as input.
 	 */
 	public static void main(String[] args) {
-		
 		try {
 
 			RayTracer tracer = new RayTracer();
