@@ -1,9 +1,10 @@
+import java.util.ArrayList;
 
 public class Camara {
 	Vector direction;
 	Vector up;
 	
-	public Camara(double positionX, double positionY, double positionZ, double lookAtX, double lookAtY, double lookAtZ, double upX, double upY, double upZ)
+	public Camara(float positionX, float positionY, float positionZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ)
 	{
 		this.direction = Vector(new Point(positionX, positionY, positionZ), new Point(lookAtX, lookAtY, lookAtZ));
 		Vector semiUp = Vector(new Point(positionX, positionY, positionZ), new Point(upX, upY, upZ));
@@ -20,6 +21,7 @@ public class Camara {
 				
 			}
 		}
+		return null;
 	}
 
 }

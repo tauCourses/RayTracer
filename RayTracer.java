@@ -1,5 +1,3 @@
-
-
 import java.awt.Transparency;
 import java.awt.color.*;
 import java.awt.image.*;
