@@ -6,9 +6,9 @@ public class Camara {
 	
 	public Camara(float positionX, float positionY, float positionZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ)
 	{
-		this.direction = Vector(new Point(positionX, positionY, positionZ), new Point(lookAtX, lookAtY, lookAtZ));
-		Vector semiUp = Vector(new Point(positionX, positionY, positionZ), new Point(upX, upY, upZ));
-		this.up = getProjection(semiUp, getPerpendicularPlane());
+		this.direction = new Vector(new Point(positionX, positionY, positionZ), new Point(lookAtX, lookAtY, lookAtZ));
+		Vector semiUp = new Vector(new Point(positionX, positionY, positionZ), new Point(upX, upY, upZ));
+		this.up = (new Plane(direction,0)).getProjection(semiUp);
 	}
 	
 	public ArrayList<Vector> getScreenVectors(double screenDistance, double screenWidth, int SuperSamplingLevel, int imageWidth, int imageHeight)
