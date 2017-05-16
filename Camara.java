@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Camara {
-	Vector direction;
+	Vector lookAt;
 	Vector up;
 	float screenDistance, screenWidth;
 	
@@ -13,6 +13,7 @@ public class Camara {
 		Vector semiUp = new Vector(location, up);
 		//this.up = (new Plane(direction,0)).getProjection(semiUp);
 		this.up = semiUp.getProjection(this.direction);
+
 	}
 	
 	public ArrayList<Vector> getScreenVectors(int SuperSamplingLevel, int i, int j)

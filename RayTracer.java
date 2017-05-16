@@ -30,7 +30,20 @@ public class RayTracer {
 	}
 	public static void main(String[] args) {
 		try {
+<<<<<<< HEAD
 				
+=======
+			Vector direction = new Vector(new Point(0, 0,0), new Point(1, 1, 1));
+			Vector semiUp = new Vector(new Point(0, 0,0), new Point(2, 2, 2));
+			Vector up = semiUp.getProjection(direction);
+			System.out.println(up);
+			
+			if (0==0){
+				return;
+			}
+			
+			
+>>>>>>> 1e80ee4a58b9a5966644ad8e3c2ca2512973206b
 			RayTracer tracer = new RayTracer();
 
                         // Default values:
