@@ -11,7 +11,7 @@ public class Plane {
 	
 	public Vector getProjection(Vector vector)
 	{
-		Vector.vectorSubtruct(vector,this.normal.vectorScalarProduct((Vector.vectorDotProduct(vector,normal)/(normal.vectorLength()))));
+		//Vector.vectorSubtruct(vector,this.normal.vectorScalarProduct((Vector.vectorDotProduct(vector,normal)/(normal.vectorLength()))));
 		return null;
 	}
 
