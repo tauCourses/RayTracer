@@ -12,6 +12,7 @@ public class Camara {
 		this.direction = new Vector(location, lookAt);
 		Vector semiUp = new Vector(location, up);
 		//this.up = (new Plane(direction,0)).getProjection(semiUp);
+		this.up = semiUp.getProjection(this.direction);
 	}
 	
 	public ArrayList<Vector> getScreenVectors(int SuperSamplingLevel, int i, int j)

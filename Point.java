@@ -21,4 +21,5 @@ public class Point {
 	{
 		return new Point(this.x*a,this.y*a,this.z*a);
 	}
+
 }

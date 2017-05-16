@@ -30,7 +30,7 @@ public class RayTracer {
 	}
 	public static void main(String[] args) {
 		try {
-
+				
 			RayTracer tracer = new RayTracer();
 
                         // Default values:
