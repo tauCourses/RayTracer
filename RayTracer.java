@@ -31,10 +31,15 @@ public class RayTracer {
 	public static void main(String[] args) {
 		try {
 <<<<<<< HEAD
+<<<<<<< HEAD
 				
 =======
 			Vector direction = new Vector(new Point(0, 0,0), new Point(1, 1, 1));
 			Vector semiUp = new Vector(new Point(0, 0,0), new Point(2, 2, 2));
+=======
+			Vector direction = new Vector(1, 1, 1);
+			Vector semiUp = new Vector(2, 2, 2);
+>>>>>>> 758dc92b49678761e64a4d5b82907bfc597ac73a
 			Vector up = semiUp.getProjection(direction);
 			System.out.println(up);
 			
