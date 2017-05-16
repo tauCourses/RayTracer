@@ -8,7 +8,7 @@ public class Camara {
 	{
 		this.direction = new Vector(new Point(positionX, positionY, positionZ), new Point(lookAtX, lookAtY, lookAtZ));
 		Vector semiUp = new Vector(new Point(positionX, positionY, positionZ), new Point(upX, upY, upZ));
-		this.up = (new Plane(direction,0)).getProjection(semiUp);
+		this.up = semiUp.getProjection(this.direction);
 	}
 	
 	public ArrayList<Vector> getScreenVectors(double screenDistance, double screenWidth, int SuperSamplingLevel, int imageWidth, int imageHeight)

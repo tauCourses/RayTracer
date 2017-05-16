@@ -24,7 +24,7 @@ public class Vector {
 	
 	public static float vectorDotProduct(Vector first, Vector second)
 	{
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stu
 		return 0;
 	}
 	
@@ -44,6 +44,12 @@ public class Vector {
 	public float vectorLength() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	
+	public Vector getProjection(Vector vector)
+	{
+		Vector.vectorSubtruct(this,vector.vectorScalarProduct((Vector.vectorDotProduct(this,vector)/(vector.vectorLength()))));
+		return null;
 	}
 	
 	
