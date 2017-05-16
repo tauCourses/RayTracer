@@ -13,13 +13,10 @@ public class Point {
 		this.y = Float.valueOf(y);
 		this.z = Float.valueOf(z);
 	}
-	public Point add(Point b)
+	public Point add(Vector v)
 	{
-		return new Point(this.x+b.x,this.y+b.y,this.z+b.z);
+		return new Point(this.x+v.x,this.y+v.y,this.z+v.z);
 	}
-	public Point scalarMultiplication(float a)
-	{
-		return new Point(this.x*a,this.y*a,this.z*a);
-	}
+	
 
 }

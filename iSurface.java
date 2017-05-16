@@ -1,6 +1,6 @@
 
 public interface iSurface {
-	public Point intersectes(Vector v); 
+	public Point intersectes(Ray ray); 
 	public Color getDiffuseColor();
 	public Color getSpecularColor();
 	public Color getReflectionColor();

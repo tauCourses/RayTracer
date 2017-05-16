@@ -1,7 +1,6 @@
 
 public class Vector {
 	
-	//public final Point origin,direction;
 	public final float x,y,z;
 		
 	public Vector(float x, float y, float z)
@@ -9,6 +8,12 @@ public class Vector {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+	}
+	public Vector(Point origin, Point destination)
+	{
+		this.x = destination.x - origin.x;
+		this.y = destination.y - origin.y;
+		this.z = destination.z - origin.z;
 	}
 	public Vector getPerpendicularVector()
 	{
@@ -54,7 +59,7 @@ public class Vector {
 	
 	public String toString()
 	{
-		return ("("+this.x+","+this.y+","+this.z+")");
+		return ("("+this.x+", "+this.y+", "+this.z+")");
 	}
 	
 	

@@ -30,25 +30,6 @@ public class RayTracer {
 	}
 	public static void main(String[] args) {
 		try {
-<<<<<<< HEAD
-<<<<<<< HEAD
-				
-=======
-			Vector direction = new Vector(new Point(0, 0,0), new Point(1, 1, 1));
-			Vector semiUp = new Vector(new Point(0, 0,0), new Point(2, 2, 2));
-=======
-			Vector direction = new Vector(1, 1, 1);
-			Vector semiUp = new Vector(2, 2, 2);
->>>>>>> 758dc92b49678761e64a4d5b82907bfc597ac73a
-			Vector up = semiUp.getProjection(direction);
-			System.out.println(up);
-			
-			if (0==0){
-				return;
-			}
-			
-			
->>>>>>> 1e80ee4a58b9a5966644ad8e3c2ca2512973206b
 			RayTracer tracer = new RayTracer();
 
                         // Default values:
@@ -193,11 +174,14 @@ public class RayTracer {
 		{
 			for(int j=0;j<this.imageWidth;j++)
 			{
-				ArrayList<Vector> rays = this.camara.getScreenVectors(1, i, j);
+				ArrayList<Ray> rays = this.camara.getScreenVectors(1, i, j);
 				for(iSurface surface: this.surfaces)
 				{
 					if(surface.intersectes(rays.get(0)) != null)
+					{
 						rgbData[(i*this.imageWidth + j)*3] = 127;
+						break;
+					}
 				}
 			}
 		}

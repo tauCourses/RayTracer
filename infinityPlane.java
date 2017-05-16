@@ -12,7 +12,7 @@ public class infinityPlane extends AbstractSurface {
 	
 
 	@Override
-	public Point intersectes(Vector v) {
+	public Point intersectes(Ray ray) {
 		// TODO Auto-generated method stub
 		return null;
 	}
