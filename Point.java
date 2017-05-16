@@ -7,6 +7,12 @@ public class Point {
 		this.y = y;
 		this.z = z;
 	}
+	public Point(String x, String y, String z)
+	{
+		this.x = Float.valueOf(x);
+		this.y = Float.valueOf(y);
+		this.z = Float.valueOf(z);
+	}
 	public Point add(Point b)
 	{
 		return new Point(this.x+b.x,this.y+b.y,this.z+b.z);

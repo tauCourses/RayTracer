@@ -3,24 +3,19 @@ import java.util.ArrayList;
 public class Camara {
 	Vector direction;
 	Vector up;
+	float screenDistance, screenWidth;
 	
-	public Camara(float positionX, float positionY, float positionZ, float lookAtX, float lookAtY, float lookAtZ, float upX, float upY, float upZ)
+	public Camara(Point location, Point lookAt, Point up, float screenDistance, float screenWidth)
 	{
-		this.direction = new Vector(new Point(positionX, positionY, positionZ), new Point(lookAtX, lookAtY, lookAtZ));
-		Vector semiUp = new Vector(new Point(positionX, positionY, positionZ), new Point(upX, upY, upZ));
-		this.up = (new Plane(direction,0)).getProjection(semiUp);
+		this.screenDistance = screenDistance;
+		this.screenWidth = screenWidth;
+		this.direction = new Vector(location, lookAt);
+		Vector semiUp = new Vector(location, up);
+		//this.up = (new Plane(direction,0)).getProjection(semiUp);
 	}
 	
-	public ArrayList<Vector> getScreenVectors(double screenDistance, double screenWidth, int SuperSamplingLevel, int imageWidth, int imageHeight)
+	public ArrayList<Vector> getScreenVectors(int SuperSamplingLevel, int i, int j)
 	{
-		
-		for (int i = 0; i < imageWidth; i++)
-		{
-			for (int j =0; j < imageHeight; j++)
-			{
-				
-			}
-		}
 		return null;
 	}
 

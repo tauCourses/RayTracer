@@ -17,10 +17,17 @@ public class RayTracer {
 
 	public int imageWidth;
 	public int imageHeight;
-
+	private Camara camara;
+	private ArrayList<Material> materialList; 
+	private ArrayList<iSurface> surfaces;
 	/**
 	 * Runs the ray tracer. Takes scene file, output image file and image size as input.
 	 */
+	public RayTracer()
+	{
+		this.materialList = new ArrayList<>();
+		this.surfaces = new ArrayList<>();
+	}
 	public static void main(String[] args) {
 		try {
 
@@ -91,32 +98,35 @@ public class RayTracer {
 
 				if (code.equals("cam"))
 				{
-                                        // Add code here to parse camera parameters
-
+					this.camara = new Camara(	new Point(params[0],params[1],params[2]),
+												new Point(params[3],params[4],params[5]),
+												new Point(params[6],params[7],params[8]),
+												Float.valueOf(params[9]),
+												Float.valueOf(params[10]));
 					System.out.println(String.format("Parsed camera parameters (line %d)", lineNum));
 				}
 				else if (code.equals("set"))
 				{
-                                        // Add code here to parse general settings parameters
+					// Add code here to parse general settings parameters
 
 					System.out.println(String.format("Parsed general settings (line %d)", lineNum));
 				}
 				else if (code.equals("mtl"))
 				{
-                                        // Add code here to parse material parameters
-
+                    Material material = new Material(new Color(params[0],params[1],params[2]),
+                    							new Color(params[3],params[4],params[5]),
+                    							new Color(params[6],params[7],params[8]),
+                    							Float.valueOf(params[9]), 
+                    							Float.valueOf(params[10]));
+                    this.materialList.add(material);
 					System.out.println(String.format("Parsed material (line %d)", lineNum));
 				}
 				else if (code.equals("sph"))
 				{
-                                        // Add code here to parse sphere parameters
-
-                                        // Example (you can implement this in many different ways!):
-					                    // Sphere sphere = new Sphere();
-                                        // sphere.setCenter(params[0], params[1], params[2]);
-                                        // sphere.setRadius(params[3]);
-                                        // sphere.setMaterial(params[4]);
-
+					Sphere sphere = new Sphere(this.materialList.get(Integer.valueOf(params[4]+1)),
+												new Point(params[0],params[1],params[2]),
+												Float.valueOf(params[3]));
+					this.surfaces.add(sphere);
 					System.out.println(String.format("Parsed sphere (line %d)", lineNum));
 				}
 				else if (code.equals("pln"))
@@ -161,16 +171,18 @@ public class RayTracer {
 		// Create a byte array to hold the pixel data:
 		byte[] rgbData = new byte[this.imageWidth * this.imageHeight * 3];
 
-
-                // Put your ray tracing code here!
-                //
-                // Write pixel color values in RGB format to rgbData:
-                // Pixel [x, y] red component is in rgbData[(y * this.imageWidth + x) * 3]
-                //            green component is in rgbData[(y * this.imageWidth + x) * 3 + 1]
-                //             blue component is in rgbData[(y * this.imageWidth + x) * 3 + 2]
-                //
-                // Each of the red, green and blue components should be a byte, i.e. 0-255
-
+		for(int i=0;i<this.imageHeight;i++)
+		{
+			for(int j=0;j<this.imageWidth;j++)
+			{
+				ArrayList<Vector> rays = this.camara.getScreenVectors(1, i, j);
+				for(iSurface surface: this.surfaces)
+				{
+					if(surface.intersectes(rays.get(0)) != null)
+						rgbData[(i*this.imageWidth + j)*3] = 127;
+				}
+			}
+		}
 
 		long endTime = System.currentTimeMillis();
 		Long renderTime = endTime - startTime;
