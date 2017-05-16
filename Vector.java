@@ -26,6 +26,11 @@ public class Vector {
 		return new Vector(first.x - second.x, first.y - second.y, first.z - second.z);
 	}
 	
+	public static Vector vectorAdd(Vector first, Vector second)
+	{
+		return new Vector(first.x + second.x, first.y + second.y, first.z + second.z);
+	}
+	
 	public Vector vectorScalarProduct(float scalar)
 	{
 		return new Vector(scalar*this.x, scalar*this.y, scalar*this.z);
