@@ -20,14 +20,14 @@ public class Vector {
 		return (first.x*second.x + first.y*second.y + first.z*second.z);
 	}
 	
-	public static Vector vectorSubtruct(Vector first, Vector second)
+	public Vector vectorSubtruct(Vector second)
 	{
-		return new Vector(first.x - second.x, first.y - second.y, first.z - second.z);
+		return new Vector(this.x - second.x, this.y - second.y, this.z - second.z);
 	}
 	
-	public static Vector vectorAdd(Vector first, Vector second)
+	public Vector vectorAdd(Vector second)
 	{
-		return new Vector(first.x + second.x, first.y + second.y, first.z + second.z);
+		return new Vector(this.x + second.x, this.y + second.y, this.z + second.z);
 	}
 	
 	public Vector vectorScalarProduct(float scalar)
@@ -38,7 +38,10 @@ public class Vector {
 	
 	public Vector getProjection(Vector vector)
 	{
-		return Vector.vectorSubtruct(this,vector.vectorScalarProduct((Vector.vectorDotProduct(this,vector)/(vectorLengthSquare()))));
+		float dotproduct = Vector.vectorDotProduct(this,vector);
+		dotproduct /= vector.vectorLengthSquare();
+		Vector normalized = vector.vectorScalarProduct(dotproduct);
+		return normalized;
 	}
 	
 	public float vectorLengthSquare()

@@ -23,10 +23,11 @@ public class RayTracer {
 	 */
 	public static void main(String[] args) {
 		try {
-			Vector direction = new Vector(1, 1, 0);
-			Vector semiUp = new Vector(0, 0, 3);
-			Vector up = semiUp.getProjection(direction);
-			System.out.println(up);
+			Vector direction = new Vector(2, 0, 0);
+			Vector semiUp = new Vector(-1, 1, 0);
+			Vector normUp = semiUp.getProjection(direction);
+			Vector finUp = semiUp.vectorSubtruct(normUp);
+			System.out.println(finUp);
 			
 			if (0==0){
 				return;
