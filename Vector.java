@@ -1,7 +1,6 @@
 
 public class Vector {
 	
-	//public final Point origin,direction;
 	public final float x,y,z;
 		
 	public Vector(float x, float y, float z)
@@ -55,7 +54,7 @@ public class Vector {
 	
 	public String toString()
 	{
-		return ("("+this.x+","+this.y+","+this.z+")");
+		return ("("+this.x+", "+this.y+", "+this.z+")");
 	}
 	
 	
