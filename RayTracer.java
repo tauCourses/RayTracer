@@ -26,8 +26,8 @@ public class RayTracer {
 			Vector direction = new Vector(new Point(0, 0,0), new Point(1, 1, 1));
 			Vector semiUp = new Vector(new Point(0, 0,0), new Point(2, 2, 2));
 			Vector up = semiUp.getProjection(direction);
-			System.out.println(up.origin.x+" "+up.origin.y+" "+up.origin.z);
-			System.out.println(up.direction.x+" "+up.direction.y+" "+up.direction.z);
+			System.out.println(up);
+			
 			if (0==0){
 				return;
 			}
