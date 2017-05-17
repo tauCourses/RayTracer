@@ -1,8 +1,8 @@
 
 public class Sphere extends AbstractSurface{
 	Point center;
-	float radius;
-	public Sphere(Material material, Point center, float radius) {
+	double radius;
+	public Sphere(Material material, Point center, double radius) {
 		super(material);
 		this.center = center;
 		this.radius = radius;
@@ -20,8 +20,10 @@ public class Sphere extends AbstractSurface{
 		double determinante = b*b-4*a*c;
 		if(determinante>=0)
 		{		
-			float d = (float) ((-b - Math.sqrt(determinante))/2);
-			ray.collisions.add(new Collision(this, ray.origin.add(ray.direction.scalarProduct(d)), d));
+			double d = ((-b - Math.sqrt(determinante))/2);
+			System.out.println(d);
+			if(d>=0)
+				ray.collisions.add(new Collision(this, ray.origin.add(ray.direction.scalarProduct(d)), d));
 		}
 	}
 

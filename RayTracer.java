@@ -103,8 +103,8 @@ public class RayTracer {
 					this.camara = new Camara(	new Point(params[0],params[1],params[2]),
 												new Point(params[3],params[4],params[5]),
 												new Point(params[6],params[7],params[8]),
-												Float.valueOf(params[9]),
-												Float.valueOf(params[10]));
+												Double.valueOf(params[9]),
+												Double.valueOf(params[10]));
 					System.out.println(String.format("Parsed camera parameters (line %d)", lineNum));
 				}
 				else if (code.equals("set"))
@@ -118,8 +118,8 @@ public class RayTracer {
                     Material material = new Material(new Color(params[0],params[1],params[2]),
                     							new Color(params[3],params[4],params[5]),
                     							new Color(params[6],params[7],params[8]),
-                    							Float.valueOf(params[9]), 
-                    							Float.valueOf(params[10]));
+                    							Double.valueOf(params[9]), 
+                    							Double.valueOf(params[10]));
                     this.materialList.add(material);
 					System.out.println(String.format("Parsed material (line %d)", lineNum));
 				}
@@ -127,7 +127,7 @@ public class RayTracer {
 				{
 					Sphere sphere = new Sphere(this.materialList.get(Integer.valueOf(params[4])-1),
 												new Point(params[0],params[1],params[2]),
-												Float.valueOf(params[3]));
+												Double.valueOf(params[3]));
 					this.surfaces.add(sphere);
 					System.out.println(String.format("Parsed sphere (line %d)", lineNum));
 				}
@@ -135,7 +135,7 @@ public class RayTracer {
 				{
 					infinityPlane infinityPlane = new infinityPlane(this.materialList.get(Integer.valueOf(params[4])-1),
                     												new Vector(params[0],params[1],params[2]), 
-                    												Float.valueOf(params[3]));
+                    												Double.valueOf(params[3]));
                     this.surfaces.add(infinityPlane);
 					System.out.println(String.format("Parsed plane (line %d)", lineNum));
 				}
@@ -170,7 +170,6 @@ public class RayTracer {
 	 */
 	public void renderScene(String outputFileName)
 	{
-		System.out.println("hi");
 		long startTime = System.currentTimeMillis();
 		this.camara.createScreen(this.imageWidth, this.imageHeight);
 		// Create a byte array to hold the pixel data:
@@ -182,25 +181,18 @@ public class RayTracer {
 				ArrayList<Ray> rays = this.camara.getScreenVectors(1, i, j);
 				Ray ray = rays.get(0);
 				for(iSurface surface: this.surfaces)
-				{
 					surface.intersectes(ray);
-				}
-				//	System.out.println("cx");
+				
 				if(ray.collisions.size() > 0)
-				{
-//					for(Collision c: temp.collisions)
-//						System.out.println(c.distance);
-//					
+				{					
 					Collections.sort(ray.collisions);
 					Color c = ray.collisions.get(0).surface.getDiffuseColor();
 					rgbData[(i*this.imageWidth + j)*3] = c.red;
 					rgbData[(i*this.imageWidth + j)*3+1] = c.green;
 					rgbData[(i*this.imageWidth + j)*3+2] = c.blue;
 				}
-				//System.out.println("fd");
 			}
 		}
-		System.out.println("cc");
 		long endTime = System.currentTimeMillis();
 		Long renderTime = endTime - startTime;
 

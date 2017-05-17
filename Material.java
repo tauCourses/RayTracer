@@ -1,8 +1,8 @@
 
 public class Material {
 	private Color diffuse, spectular, reflected;
-	private float phong, transparency;
-	public Material(Color diffuse, Color spectular, Color reflected, float phong, float transparency)
+	private double phong, transparency;
+	public Material(Color diffuse, Color spectular, Color reflected, double phong, double transparency)
 	{
 		this.diffuse = diffuse;
 		this.spectular = spectular;
@@ -22,11 +22,11 @@ public class Material {
 	{
 		return this.reflected;
 	}
-	public float getPhong()
+	public double getPhong()
 	{
 		return this.phong;
 	}
-	public float getTransparency()
+	public double getTransparency()
 	{
 		return this.transparency;
 	}

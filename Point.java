@@ -1,7 +1,7 @@
 
 public class Point {
-	public final float x,y,z;
-	public Point(float x, float y, float z)
+	public final double x,y,z;
+	public Point(double x, double y, double z)
 	{
 		this.x = x;
 		this.y = y;
@@ -9,9 +9,9 @@ public class Point {
 	}
 	public Point(String x, String y, String z)
 	{
-		this.x = Float.valueOf(x);
-		this.y = Float.valueOf(y);
-		this.z = Float.valueOf(z);
+		this.x = Double.valueOf(x);
+		this.y = Double.valueOf(y);
+		this.z = Double.valueOf(z);
 	}
 	public Point add(Vector v)
 	{
