@@ -28,11 +28,12 @@ public class RayTracer {
 		this.materialList = new ArrayList<>();
 		this.surfaces = new ArrayList<>();
 	}
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException, RayTracerException {
 		try {
+						
 			RayTracer tracer = new RayTracer();
 
-                        // Default values:
+            // Default values:
 			tracer.imageWidth = 500;
 			tracer.imageHeight = 500;
 
@@ -55,8 +56,8 @@ public class RayTracer {
 			// Render scene:
 			tracer.renderScene(outputFileName);
 
-//		} catch (IOException e) {
-//			System.out.println(e.getMessage());
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
 		} catch (RayTracerException e) {
 			System.out.println(e.getMessage());
 		} catch (Exception e) {
@@ -76,7 +77,7 @@ public class RayTracer {
 		BufferedReader r = new BufferedReader(fr);
 		String line = null;
 		int lineNum = 0;
-		System.out.println("Started parsing scene file " + sceneFileName);
+		//System.out.println("Started parsing scene file " + sceneFileName);
 
 
 
@@ -97,6 +98,8 @@ public class RayTracer {
 
 				if (code.equals("cam"))
 				{
+					System.out.println(line);
+					
 					this.camara = new Camara(	new Point(params[0],params[1],params[2]),
 												new Point(params[3],params[4],params[5]),
 												new Point(params[6],params[7],params[8]),
@@ -122,7 +125,7 @@ public class RayTracer {
 				}
 				else if (code.equals("sph"))
 				{
-					Sphere sphere = new Sphere(this.materialList.get(Integer.valueOf(params[4]+1)),
+					Sphere sphere = new Sphere(this.materialList.get(Integer.valueOf(params[4])-1),
 												new Point(params[0],params[1],params[2]),
 												Float.valueOf(params[3]));
 					this.surfaces.add(sphere);
@@ -130,8 +133,10 @@ public class RayTracer {
 				}
 				else if (code.equals("pln"))
 				{
-                                        // Add code here to parse plane parameters
-
+					infinityPlane infinityPlane = new infinityPlane(this.materialList.get(Integer.valueOf(params[4])-1),
+                    												new Vector(params[0],params[1],params[2]), 
+                    												Float.valueOf(params[3]));
+                    this.surfaces.add(infinityPlane);
 					System.out.println(String.format("Parsed plane (line %d)", lineNum));
 				}
 				else if (code.equals("trg"))
@@ -165,8 +170,9 @@ public class RayTracer {
 	 */
 	public void renderScene(String outputFileName)
 	{
+		System.out.println("hi");
 		long startTime = System.currentTimeMillis();
-
+		this.camara.createScreen(this.imageWidth, this.imageHeight);
 		// Create a byte array to hold the pixel data:
 		byte[] rgbData = new byte[this.imageWidth * this.imageHeight * 3];
 
@@ -177,9 +183,12 @@ public class RayTracer {
 				ArrayList<Ray> rays = this.camara.getScreenVectors(1, i, j);
 				for(iSurface surface: this.surfaces)
 				{
-					if(surface.intersectes(rays.get(0)) != null)
+					Ray temp = rays.get(0);
+					if(surface.intersectes(temp) != null)
 					{
-						rgbData[(i*this.imageWidth + j)*3] = 127;
+						rgbData[(i*this.imageWidth + j)*3] = temp.c.red;
+						rgbData[(i*this.imageWidth + j)*3+1] = temp.c.green;
+						rgbData[(i*this.imageWidth + j)*3+2] = temp.c.blue;
 						break;
 					}
 				}

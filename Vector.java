@@ -9,52 +9,66 @@ public class Vector {
 		this.y = y;
 		this.z = z;
 	}
+	
 	public Vector(Point origin, Point destination)
 	{
 		this.x = destination.x - origin.x;
 		this.y = destination.y - origin.y;
 		this.z = destination.z - origin.z;
 	}
-	public Vector getPerpendicularVector()
+	
+	public Vector(String x, String y, String z)
 	{
-		return new Vector(1,1,(this.x+this.y/this.z)); //xa+yb+zc=0, a=1 b=1 c=(x+y)/z
+		this.x = Float.valueOf(x);
+		this.y = Float.valueOf(y);
+		this.z = Float.valueOf(z);
 	}
 	
-	public static float vectorDotProduct(Vector first, Vector second)
+	public static Vector crossProduct(Vector v1, Vector v2)
+	{
+		return new Vector(v1.y*v2.z - v1.z*v2.y, v1.z*v2.x-v1.x*v2.z,v1.x*v2.y-v1.y*v2.x);
+	}
+	
+	public static float dotProduct(Vector first, Vector second)
 	{
 		return (first.x*second.x + first.y*second.y + first.z*second.z);
 	}
 	
-	public static Vector vectorSubtruct(Vector first, Vector second)
+	public Vector getUnitVector()
 	{
-		return new Vector(first.x - second.x, first.y - second.y, first.z - second.z);
+		return this.scalarProduct(1/this.getLength());
+	}
+	public Vector subtruct(Vector second)
+	{
+		return new Vector(this.x - second.x, this.y - second.y, this.z - second.z);
 	}
 	
-	public static Vector vectorAdd(Vector first, Vector second)
+	public Vector add(Vector second)
 	{
-		return new Vector(first.x + second.x, first.y + second.y, first.z + second.z);
+		return new Vector(this.x + second.x, this.y + second.y, this.z + second.z);
 	}
 	
-	public Vector vectorScalarProduct(float scalar)
+	public Vector scalarProduct(float scalar)
 	{
 		return new Vector(scalar*this.x, scalar*this.y, scalar*this.z);
 	}
 	
-	
 	public Vector getProjection(Vector vector)
 	{
-		return Vector.vectorSubtruct(this,vector.vectorScalarProduct((Vector.vectorDotProduct(this,vector)/(vectorLengthSquare()))));
+		float dotproduct = Vector.dotProduct(this,vector);
+		dotproduct /= vector.getLengthSquare();
+		Vector normalized = vector.scalarProduct(dotproduct);
+		return normalized;
 	}
 	
-	public float vectorLengthSquare()
+	public float getLengthSquare()
 	{
 		return (this.x*this.x + this.y*this.y + this.z*this.z);
 	}
 	
-	public double vectorLength()
+	public float getLength()
 	{
-		
-		return Math.sqrt(this.vectorLengthSquare());
+		return (float)Math.sqrt(this.getLengthSquare());
 	}
 	
 	public String toString()

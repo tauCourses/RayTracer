@@ -10,9 +10,9 @@ public class Color {
 	}
 	public Color(String red,String green,String blue)
 	{		
-		this.red = Byte.valueOf(red);
-		this.green = Byte.valueOf(green);
-		this.blue = Byte.valueOf(blue);
+		this.red = (byte) ((int)(Float.valueOf(red)*256) & 0xFF) ;
+		this.green = (byte) ((int)(Float.valueOf(green)*256) & 0xFF) ;
+		this.blue = (byte) ((int)(Float.valueOf(blue)*256) & 0xFF) ;
 	}
 	public static Color average(ArrayList<Color> arr)
 	{

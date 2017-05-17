@@ -10,19 +10,20 @@ public class Sphere extends AbstractSurface{
 
 	@Override
 	public Point intersectes(Ray ray) {
-		float a = ray.direction.x*ray.direction.x + ray.direction.y*ray.direction.y + ray.direction.z*ray.direction.z;
-		float b = 2*(	ray.direction.x*(ray.origin.x-this.center.x) + 
+		double a = ray.direction.x*ray.direction.x + ray.direction.y*ray.direction.y + ray.direction.z*ray.direction.z;
+		double b = 2*(	ray.direction.x*(ray.origin.x-this.center.x) + 
 						ray.direction.y*(ray.origin.y-this.center.y) + 
 						ray.direction.z*(ray.origin.z-this.center.z) );
-		float c = 	(ray.origin.x-this.center.x)*(ray.origin.x-this.center.x) +
+		double c = 	(ray.origin.x-this.center.x)*(ray.origin.x-this.center.x) +
 					(ray.origin.y-this.center.y)*(ray.origin.y-this.center.y) +
-					(ray.origin.y-this.center.y)*(ray.origin.y-this.center.y);
-		float determinante = b*b-4*a*c;
+					(ray.origin.z-this.center.z)*(ray.origin.z-this.center.z) - this.radius*this.radius;
+		double determinante = b*b-4*a*c;
 		if(determinante<0)
 			return null;
 		
 		float d = (float) ((-b - Math.sqrt(determinante))/2);
-		return ray.origin.add(ray.direction.vectorScalarProduct(d));
+		ray.c = this.getDiffuseColor();
+		return ray.origin.add(ray.direction.scalarProduct(d));
 		
 	}
 

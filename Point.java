@@ -18,5 +18,9 @@ public class Point {
 		return new Point(this.x+v.x,this.y+v.y,this.z+v.z);
 	}
 	
+	public String toString()
+	{
+		return ("("+this.x+", "+this.y+", "+this.z+")");
+	}
 
 }
