@@ -21,6 +21,7 @@ public class RayTracer {
 	private Camara camara;
 	private ArrayList<Material> materialList; 
 	private ArrayList<iSurface> surfaces;
+	private ArrayList<Light> lights;
 	/**
 	 * Runs the ray tracer. Takes scene file, output image file and image size as input.
 	 */
@@ -147,7 +148,8 @@ public class RayTracer {
 				}
 				else if (code.equals("lgt"))
 				{
-                                        // Add code here to parse light parameters
+					Light light = new Light(new Point(Double.valueOf(params[0]), Double.valueOf(params[1]),Double.valueOf(params[2])), new Color(params[3],params[4],params[5]), Double.valueOf(params[6]), Double.valueOf(params[7]), Double.valueOf(params[8]));
+					this.lights.add(light);
 
 					System.out.println(String.format("Parsed light (line %d)", lineNum));
 				}
