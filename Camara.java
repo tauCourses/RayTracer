@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 
 public class Camara {
-	Point location;
-	Vector lookAt;
-	Vector up;
-	float screenDistance, screenWidth, screenHeight;
-	Point mostLeftUp;
-	Vector widthDirection, heightDirection;
+	private Point location;
+	private Vector lookAt, up;
+	
+	private float screenDistance, screenWidth, screenHeight;
+	private Point mostLeftUp;
+	private Vector pixelWidthDirection, pixelHeightDirection;
 	
 	public Camara(Point location, Point lookAt, Point up, float screenDistance, float screenWidth)
 	{
@@ -14,11 +14,11 @@ public class Camara {
 		this.screenDistance = screenDistance;
 		this.screenWidth = screenWidth;
 		System.out.println("location - " + this.location);
-		this.lookAt = new Vector(location, lookAt).getUnitVector();
+		this.lookAt = new Vector(location, lookAt).toUnitVector();
 		System.out.println("look at vector " + this.lookAt);
-		Vector upDirection = new Vector(location, up);
+		Vector upDirection = new Vector(location, up); //not orthogonal with lookAt
 		System.out.println("up before - " + upDirection);
-		this.up = upDirection.subtruct(upDirection.getProjection(this.lookAt)).getUnitVector();
+		this.up = upDirection.subtruct(upDirection.getProjection(this.lookAt)).toUnitVector();
 		System.out.println("new up - " + this.up);
 	}
 	
@@ -31,19 +31,19 @@ public class Camara {
 		Point screenCenter = this.location.add(this.lookAt.scalarProduct(this.screenDistance));
 		System.out.println("location - " + this.location);
 		System.out.println("look at " + this.lookAt);
-		this.mostLeftUp = screenCenter.add(this.up.scalarProduct(this.screenHeight/2).add(Vector.crossProduct(this.up, this.lookAt).scalarProduct(this.screenWidth/2)));
-		this.heightDirection = this.up.scalarProduct((-1)*this.screenHeight/y);
-		this.widthDirection = Vector.crossProduct(this.up, this.lookAt).getUnitVector().scalarProduct((-1)*this.screenWidth/x);
+		this.mostLeftUp = screenCenter.add(this.up.scalarProduct(this.screenHeight/2).add(Vector.crossProduct(this.up, this.lookAt).toUnitVector().scalarProduct(this.screenWidth/2)));
+		this.pixelHeightDirection = this.up.scalarProduct((-1)*this.screenHeight/y);
+		this.pixelWidthDirection = Vector.crossProduct(this.up, this.lookAt).toUnitVector().scalarProduct((-1)*this.screenWidth/x);
 		System.out.println("screen center- " + screenCenter);
 		System.out.println("screen left up- " + mostLeftUp);
-		System.out.println("screen dir height- " + heightDirection);
-		System.out.println("screen dir width- " + widthDirection);
+		System.out.println("screen dir height- " + pixelHeightDirection);
+		System.out.println("screen dir width- " + pixelWidthDirection);
 	}
 	public ArrayList<Ray> getScreenVectors(int SuperSamplingLevel, int i, int j)
 	{
 		ArrayList<Ray> temp = new ArrayList<>();
-		Point org = this.mostLeftUp.add(this.widthDirection.scalarProduct((float)(j+0.5)).add(this.heightDirection.scalarProduct((float)(i+0.5))));
-		temp.add(new Ray(org, new Vector(this.location,org).getUnitVector()));
+		Point pixelPoint = this.mostLeftUp.add(this.pixelWidthDirection.scalarProduct((float)(j+0.5)).add(this.pixelHeightDirection.scalarProduct((float)(i+0.5))));
+		temp.add(new Ray(pixelPoint, new Vector(this.location,pixelPoint).toUnitVector()));
 		return temp;
 	}
 

@@ -34,7 +34,7 @@ public class Vector {
 		return (first.x*second.x + first.y*second.y + first.z*second.z);
 	}
 	
-	public Vector getUnitVector()
+	public Vector toUnitVector()
 	{
 		return this.scalarProduct(1/this.getLength());
 	}

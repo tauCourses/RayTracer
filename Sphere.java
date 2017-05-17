@@ -9,7 +9,7 @@ public class Sphere extends AbstractSurface{
 	}
 
 	@Override
-	public Point intersectes(Ray ray) {
+	public void intersectes(Ray ray) {
 		double a = ray.direction.x*ray.direction.x + ray.direction.y*ray.direction.y + ray.direction.z*ray.direction.z;
 		double b = 2*(	ray.direction.x*(ray.origin.x-this.center.x) + 
 						ray.direction.y*(ray.origin.y-this.center.y) + 
@@ -18,13 +18,11 @@ public class Sphere extends AbstractSurface{
 					(ray.origin.y-this.center.y)*(ray.origin.y-this.center.y) +
 					(ray.origin.z-this.center.z)*(ray.origin.z-this.center.z) - this.radius*this.radius;
 		double determinante = b*b-4*a*c;
-		if(determinante<0)
-			return null;
-		
-		float d = (float) ((-b - Math.sqrt(determinante))/2);
-		ray.c = this.getDiffuseColor();
-		return ray.origin.add(ray.direction.scalarProduct(d));
-		
+		if(determinante>=0)
+		{		
+			float d = (float) ((-b - Math.sqrt(determinante))/2);
+			ray.collisions.add(new Collision(this, ray.origin.add(ray.direction.scalarProduct(d)), d));
+		}
 	}
 
 }

@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -29,7 +30,7 @@ public class RayTracer {
 		this.surfaces = new ArrayList<>();
 	}
 	public static void main(String[] args) throws IOException, RayTracerException {
-		try {
+		//try {
 						
 			RayTracer tracer = new RayTracer();
 
@@ -56,13 +57,13 @@ public class RayTracer {
 			// Render scene:
 			tracer.renderScene(outputFileName);
 
-		} catch (IOException e) {
+		/*} catch (IOException e) {
 			System.out.println(e.getMessage());
 		} catch (RayTracerException e) {
 			System.out.println(e.getMessage());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-		}
+		}*/
 
 
 	}
@@ -73,7 +74,6 @@ public class RayTracer {
 	public void parseScene(String sceneFileName) throws IOException, RayTracerException
 	{
 		FileReader fr = new FileReader(sceneFileName);
-
 		BufferedReader r = new BufferedReader(fr);
 		String line = null;
 		int lineNum = 0;
@@ -175,26 +175,32 @@ public class RayTracer {
 		this.camara.createScreen(this.imageWidth, this.imageHeight);
 		// Create a byte array to hold the pixel data:
 		byte[] rgbData = new byte[this.imageWidth * this.imageHeight * 3];
-
 		for(int i=0;i<this.imageHeight;i++)
 		{
 			for(int j=0;j<this.imageWidth;j++)
 			{
 				ArrayList<Ray> rays = this.camara.getScreenVectors(1, i, j);
+				Ray ray = rays.get(0);
 				for(iSurface surface: this.surfaces)
 				{
-					Ray temp = rays.get(0);
-					if(surface.intersectes(temp) != null)
-					{
-						rgbData[(i*this.imageWidth + j)*3] = temp.c.red;
-						rgbData[(i*this.imageWidth + j)*3+1] = temp.c.green;
-						rgbData[(i*this.imageWidth + j)*3+2] = temp.c.blue;
-						break;
-					}
+					surface.intersectes(ray);
 				}
+				//	System.out.println("cx");
+				if(ray.collisions.size() > 0)
+				{
+//					for(Collision c: temp.collisions)
+//						System.out.println(c.distance);
+//					
+					Collections.sort(ray.collisions);
+					Color c = ray.collisions.get(0).surface.getDiffuseColor();
+					rgbData[(i*this.imageWidth + j)*3] = c.red;
+					rgbData[(i*this.imageWidth + j)*3+1] = c.green;
+					rgbData[(i*this.imageWidth + j)*3+2] = c.blue;
+				}
+				//System.out.println("fd");
 			}
 		}
-
+		System.out.println("cc");
 		long endTime = System.currentTimeMillis();
 		Long renderTime = endTime - startTime;
 
