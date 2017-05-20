@@ -27,4 +27,25 @@ public class Color {
 							(byte)(green/arr.size()),
 							(byte)(blue/arr.size()) );
 	}
+	public Color add(Color c)
+	{
+		int red=this.red&0xff,green=this.green&0xff,blue=this.blue&0xff;
+		
+		red += c.red&0xff;
+		green += c.green&0xff;
+		blue += c.blue&0xff;
+		
+		return new Color(	(byte)(red),
+							(byte)(green),
+							(byte)(blue) );
+	}
+	public Color scalarProduct(double d)
+	{
+		int red=this.red&0xff,green=this.green&0xff,blue=this.blue&0xff;
+		
+		
+		return new Color(	(byte)(red*d),
+							(byte)(green*d),
+							(byte)(blue*d) );
+	}
 }

@@ -22,7 +22,10 @@ public class Sphere extends AbstractSurface{
 		{		
 			double d = ((-b - Math.sqrt(determinante))/2);
 			if(d>=0)
-				ray.collisions.add(new Collision(this, ray.origin.add(ray.direction.scalarProduct(d)), d));
+			{
+				Point intersectionPoint = ray.origin.add(ray.direction.scalarProduct(d));
+				ray.collisions.add(new Collision(this, intersectionPoint , d, new Vector(this.center, intersectionPoint).toUnitVector()));
+			}
 		}
 	}
 

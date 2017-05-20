@@ -10,7 +10,7 @@ public class Triangle extends AbstractSurface{
 		this.second = second;
 		this.third = third;
 			
-		this.normal = Vector.crossProduct(new Vector(this.second, this.first), new Vector(this.third,this.second));
+		this.normal = Vector.crossProduct(new Vector(this.second, this.first), new Vector(this.third,this.second)).toUnitVector();
 		this.offset = Vector.dotProduct(new Vector(this.third), this.normal);
 		
 		this.firstNormal = Vector.crossProduct(new Vector(this.second, this.first), this.normal);
@@ -27,7 +27,7 @@ public class Triangle extends AbstractSurface{
 		double d = -(Vector.dotProduct(this.normal, new Vector(ray.origin)) - this.offset) / temp; 
 		if(d<0)
 		{
-			System.out.println("negative d triangle - " + d);
+			//System.out.println("negative d triangle - " + d);
 			return;
 		}
 		Point intersection = ray.origin.add(ray.direction.scalarProduct(d));
@@ -45,7 +45,7 @@ public class Triangle extends AbstractSurface{
 			return;
 		
 		
-		ray.collisions.add(new Collision(this, intersection, d));
+		ray.collisions.add(new Collision(this, intersection, d, this.normal));
 		
 	}
 }

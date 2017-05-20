@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Camara {
 	private Point location;
@@ -8,20 +9,24 @@ public class Camara {
 	private Point mostLeftUp;
 	private Vector pixelWidthDirection, pixelHeightDirection;
 	
-	public Camara(Point location, Point lookAt, Point up, double screenDistance, double screenWidth)
+	Random generatorRandomDoubles;
+	
+	public Camara(Point location, Point lookAt, Vector up, double screenDistance, double screenWidth)
 	{
 		this.location = location;
 		this.screenDistance = screenDistance;
 		this.screenWidth = screenWidth;
 		this.lookAt = new Vector(location, lookAt).toUnitVector();
-		Vector upDirection = new Vector(location, up); //not orthogonal with lookAt
-		this.up = upDirection.subtruct(upDirection.getProjection(this.lookAt)).toUnitVector();
+		this.up = up.subtruct(up.getProjection(this.lookAt)).toUnitVector();
 		
-		System.out.println("\ncamera :");
+		generatorRandomDoubles = new Random();
+		/*System.out.println("\ncamera :");
 		System.out.println("location - " + this.location);
+		System.out.println("look at point - " + lookAt);
 		System.out.println("look at vector " + this.lookAt);
-		System.out.println("up before - " + upDirection);
-		System.out.println("new up - " + this.up + "\n");
+		System.out.println("up point - " + up);
+		System.out.println("up before - " + up);
+		System.out.println("new up - " + this.up + "\n");*/
 			
 	}
 	
@@ -39,11 +44,20 @@ public class Camara {
 		this.pixelWidthDirection = right.scalarProduct(this.screenWidth/x);
 	}
 	
-	public ArrayList<Ray> getScreenVectors(int SuperSamplingLevel, int i, int j)
+	public ArrayList<Ray> getScreenVectors(int superSamplingLevel, int i, int j)
 	{
 		ArrayList<Ray> raysArray = new ArrayList<>();
-		Point pixelPoint = this.mostLeftUp.add(this.pixelWidthDirection.scalarProduct((float)(j+0.5)).add(this.pixelHeightDirection.scalarProduct((float)(i+0.5))));
-		raysArray.add(new Ray(pixelPoint, new Vector(this.location, pixelPoint).toUnitVector()));
+		Point pixelPoint = this.mostLeftUp.add(this.pixelWidthDirection.scalarProduct((double)(j)).add(this.pixelHeightDirection.scalarProduct((double)(i))));
+		Vector inPixelWidthDirection = this.pixelWidthDirection.scalarProduct(1/superSamplingLevel);
+		Vector inPixelHeightDirection = this.pixelHeightDirection.scalarProduct(1/superSamplingLevel); 
+		for(int k=0;k<superSamplingLevel;k++)
+		{
+			for(int p=0;p<superSamplingLevel;p++)
+			{
+				Point inPixelPoint = pixelPoint.add(inPixelWidthDirection.scalarProduct((double)(p) + generatorRandomDoubles.nextDouble()).add(inPixelHeightDirection.scalarProduct((double)(k)+ generatorRandomDoubles.nextDouble())));
+				raysArray.add(new Ray(inPixelPoint, new Vector(this.location, inPixelPoint).toUnitVector()));
+			}
+		}
 		return raysArray;
 	}
 

@@ -18,7 +18,7 @@ public class infinityPlane extends AbstractSurface {
 		Vector temp = new Vector(ray.origin, p);
 		double sigma = Vector.dotProduct(temp, normal)/ Vector.dotProduct(ray.direction, this.normal);
 		if(sigma>=0)	
-			ray.collisions.add(new Collision(this, ray.origin.add(ray.direction.scalarProduct(sigma)), sigma));
+			ray.collisions.add(new Collision(this, ray.origin.add(ray.direction.scalarProduct(sigma)), sigma, this.normal));
 		
 	}
 
