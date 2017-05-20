@@ -17,6 +17,12 @@ public class Vector {
 		this.z = destination.z - origin.z;
 	}
 	
+	public Vector(Point origin)
+	{
+		this.x = origin.x;
+		this.y = origin.y;
+		this.z = origin.z;
+	}
 	public Vector(String x, String y, String z)
 	{
 		this.x = Float.valueOf(x);

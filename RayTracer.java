@@ -98,20 +98,20 @@ public class RayTracer {
 
 				if (code.equals("cam"))
 				{
-					System.out.println(line);
+					//System.out.println(line);
 					
 					this.camara = new Camara(	new Point(params[0],params[1],params[2]),
 												new Point(params[3],params[4],params[5]),
 												new Point(params[6],params[7],params[8]),
 												Double.valueOf(params[9]),
 												Double.valueOf(params[10]));
-					System.out.println(String.format("Parsed camera parameters (line %d)", lineNum));
+					//System.out.println(String.format("Parsed camera parameters (line %d)", lineNum));
 				}
 				else if (code.equals("set"))
 				{
 					// Add code here to parse general settings parameters
 
-					System.out.println(String.format("Parsed general settings (line %d)", lineNum));
+					//System.out.println(String.format("Parsed general settings (line %d)", lineNum));
 				}
 				else if (code.equals("mtl"))
 				{
@@ -121,7 +121,7 @@ public class RayTracer {
                     							Double.valueOf(params[9]), 
                     							Double.valueOf(params[10]));
                     this.materialList.add(material);
-					System.out.println(String.format("Parsed material (line %d)", lineNum));
+				//	System.out.println(String.format("Parsed material (line %d)", lineNum));
 				}
 				else if (code.equals("sph"))
 				{
@@ -129,7 +129,7 @@ public class RayTracer {
 												new Point(params[0],params[1],params[2]),
 												Double.valueOf(params[3]));
 					this.surfaces.add(sphere);
-					System.out.println(String.format("Parsed sphere (line %d)", lineNum));
+			//		System.out.println(String.format("Parsed sphere (line %d)", lineNum));
 				}
 				else if (code.equals("pln"))
 				{
@@ -137,23 +137,26 @@ public class RayTracer {
                     												new Vector(params[0],params[1],params[2]), 
                     												Double.valueOf(params[3]));
                     this.surfaces.add(infinityPlane);
-					System.out.println(String.format("Parsed plane (line %d)", lineNum));
+		//			System.out.println(String.format("Parsed plane (line %d)", lineNum));
 				}
 				else if (code.equals("trg"))
 				{
-                                        // Add code here to parse cylinder parameters
-
-					System.out.println(String.format("Parsed cylinder (line %d)", lineNum));
+                    Triangle triangle = new Triangle(this.materialList.get(Integer.valueOf(params[9])-1),
+                    								new Point(params[0],params[1],params[2]), 
+                    								new Point(params[3],params[4],params[5]), 
+                    								new Point(params[6],params[7],params[8]));
+                    this.surfaces.add(triangle);
+	//				System.out.println(String.format("Parsed cylinder (line %d)", lineNum));
 				}
 				else if (code.equals("lgt"))
 				{
                                         // Add code here to parse light parameters
 
-					System.out.println(String.format("Parsed light (line %d)", lineNum));
+					//System.out.println(String.format("Parsed light (line %d)", lineNum));
 				}
 				else
 				{
-					System.out.println(String.format("ERROR: Did not recognize object: %s (line %d)", code, lineNum));
+//					System.out.println(String.format("ERROR: Did not recognize object: %s (line %d)", code, lineNum));
 				}
 			}
 		}

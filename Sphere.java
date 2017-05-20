@@ -21,7 +21,6 @@ public class Sphere extends AbstractSurface{
 		if(determinante>=0)
 		{		
 			double d = ((-b - Math.sqrt(determinante))/2);
-			System.out.println(d);
 			if(d>=0)
 				ray.collisions.add(new Collision(this, ray.origin.add(ray.direction.scalarProduct(d)), d));
 		}

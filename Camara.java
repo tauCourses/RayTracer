@@ -13,13 +13,16 @@ public class Camara {
 		this.location = location;
 		this.screenDistance = screenDistance;
 		this.screenWidth = screenWidth;
-		System.out.println("location - " + this.location);
 		this.lookAt = new Vector(location, lookAt).toUnitVector();
-		System.out.println("look at vector " + this.lookAt);
 		Vector upDirection = new Vector(location, up); //not orthogonal with lookAt
-		System.out.println("up before - " + upDirection);
 		this.up = upDirection.subtruct(upDirection.getProjection(this.lookAt)).toUnitVector();
-		System.out.println("new up - " + this.up);
+		
+		System.out.println("\ncamera :");
+		System.out.println("location - " + this.location);
+		System.out.println("look at vector " + this.lookAt);
+		System.out.println("up before - " + upDirection);
+		System.out.println("new up - " + this.up + "\n");
+			
 	}
 	
 	public void createScreen(int x, int y)
@@ -40,7 +43,7 @@ public class Camara {
 	{
 		ArrayList<Ray> raysArray = new ArrayList<>();
 		Point pixelPoint = this.mostLeftUp.add(this.pixelWidthDirection.scalarProduct((float)(j+0.5)).add(this.pixelHeightDirection.scalarProduct((float)(i+0.5))));
-		raysArray.add(new Ray(pixelPoint, new Vector(this.location, pixelPoint)));
+		raysArray.add(new Ray(pixelPoint, new Vector(this.location, pixelPoint).toUnitVector()));
 		return raysArray;
 	}
 
