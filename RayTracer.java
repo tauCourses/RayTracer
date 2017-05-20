@@ -1,13 +1,19 @@
 import java.awt.Transparency;
-import java.awt.color.*;
-import java.awt.image.*;
+import java.awt.color.ColorSpace;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.ComponentColorModel;
+import java.awt.image.DataBuffer;
+import java.awt.image.DataBufferByte;
+import java.awt.image.Raster;
+import java.awt.image.SampleModel;
+import java.awt.image.WritableRaster;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -21,6 +27,7 @@ public class RayTracer {
 	private Camara camara;
 	private ArrayList<Material> materialList; 
 	private ArrayList<iSurface> surfaces;
+	//private ArrayList<Light> lights;
 	/**
 	 * Runs the ray tracer. Takes scene file, output image file and image size as input.
 	 */
@@ -76,7 +83,7 @@ public class RayTracer {
 		FileReader fr = new FileReader(sceneFileName);
 		BufferedReader r = new BufferedReader(fr);
 		String line = null;
-		int lineNum = 0;
+		//int lineNum = 0;
 		//System.out.println("Started parsing scene file " + sceneFileName);
 
 
@@ -84,7 +91,7 @@ public class RayTracer {
 		while ((line = r.readLine()) != null)
 		{
 			line = line.trim();
-			++lineNum;
+	//		++lineNum;
 
 			if (line.isEmpty() || (line.charAt(0) == '#'))
 			{  // This line in the scene file is a comment
@@ -150,7 +157,8 @@ public class RayTracer {
 				}
 				else if (code.equals("lgt"))
 				{
-                                        // Add code here to parse light parameters
+					//Light light = new Light(new Point(params[0], params[1],params[2]), new Color(params[3],params[4],params[5]), Double.valueOf(params[6]), Double.valueOf(params[7]), Double.valueOf(params[8]));
+					//this.lights.add(light);
 
 					//System.out.println(String.format("Parsed light (line %d)", lineNum));
 				}
@@ -165,7 +173,7 @@ public class RayTracer {
                 // for example camera settings and all necessary materials were defined.
 
 		System.out.println("Finished parsing scene file " + sceneFileName);
-
+		r.close();
 	}
 
 	/**
@@ -248,6 +256,11 @@ public class RayTracer {
 	}
 
 	public static class RayTracerException extends Exception {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		public RayTracerException(String msg) {  super(msg); }
 	}
 
