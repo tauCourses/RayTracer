@@ -190,14 +190,14 @@ public class RayTracer {
 	public void renderScene(String outputFileName)
 	{
 		long startTime = System.currentTimeMillis();
-		this.camara.createScreen(this.imageWidth, this.imageHeight);
+		this.camara.createScreen(this.imageWidth, this.imageHeight, this.superSampelingLevel);
 		// Create a byte array to hold the pixel data:
 		byte[] rgbData = new byte[this.imageWidth * this.imageHeight * 3];
 		for(int i=0;i<this.imageHeight;i++)
 		{
 			for(int j=0;j<this.imageWidth;j++)
 			{
-				ArrayList<Ray> rays = this.camara.getScreenVectors(this.superSampelingLevel, i, j);
+				ArrayList<Ray> rays = this.camara.getScreenVectors(i, j);
 				ArrayList<Color> raysColors = new ArrayList<>();
 				for(Ray ray:rays)
 				{
@@ -282,10 +282,10 @@ public class RayTracer {
 							getReflectionColor(ray,time+1));
 		}
 		else
-		{
 			return this.backgroundColor;
-		}
+		
 	}
+	
 	private Color getBackGroundColor(Ray ray, int time)
 	{
 		if(ray.collisions.size() <= 1)
@@ -297,6 +297,7 @@ public class RayTracer {
 		
 		return getColorFromRay(newRay, time);
 	}
+	
 	private Color getDiffusedColor(Ray ray)
 	{
 		return ray.collisions.get(0).surface.getDiffuseColor();
@@ -313,7 +314,7 @@ public class RayTracer {
 		Ray newRay = new Ray(ray.collisions.get(0).position,newDirection);
 		for(iSurface surface: this.surfaces)
 			surface.intersectes(newRay);
-		return getColorFromRay(newRay,time); //wrong! should be multiply by something somehow 
+		return getColorFromRay(newRay,time).multiply(ray.collisions.get(0).surface.getReflectionColor());
 	}
 
 }

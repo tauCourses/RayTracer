@@ -39,6 +39,20 @@ public class Color {
 							(byte)(green),
 							(byte)(blue) );
 	}
+	
+	public Color multiply(Color c)
+	{
+		int red=this.red&0xff,green=this.green&0xff,blue=this.blue&0xff;
+		
+		red *= c.red&0xff;
+		green *= c.green&0xff;
+		blue *= c.blue&0xff;
+		
+		return new Color(	(byte)(red/255),
+							(byte)(green/255),
+							(byte)(blue/255) );
+	}
+	
 	public Color scalarProduct(double d)
 	{
 		int red=this.red&0xff,green=this.green&0xff,blue=this.blue&0xff;
