@@ -68,6 +68,21 @@ public class Vector {
 		return normalized;
 	}
 	
+	public Vector getPerpendicular()
+	{
+		double newX = 1;
+		double newY = 1;
+		double newZ = 1;
+		if (this.x != 0)
+			newX = 0;
+		else
+			if (this.y != 0)
+				newY = 0;
+			else
+				newZ = 0;
+		return crossProduct(crossProduct(this, new Vector(newX,newY,newZ)), this);
+	}
+	
 	public double getLengthSquare()
 	{
 		return (this.x*this.x + this.y*this.y + this.z*this.z);
