@@ -200,7 +200,7 @@ public class RayTracer {
 	 */
 	public void renderScene(String outputFileName)
 	{
-		this.numberOfShadowRays = 1;
+		//this.numberOfShadowRays = 1;
 		this.squareNumberOfShadowRays = this.numberOfShadowRays * this.numberOfShadowRays;
 		System.out.println("shadow rays - " + this.numberOfShadowRays);
 	//	this.superSampelingLevel = 1;
@@ -232,9 +232,9 @@ public class RayTracer {
 					colors[k] = getColorFromRay(rays[k],1);
 				}
 				Color c = Color.average(colors);
-				rgbData[(i*this.imageWidth + j)*3] = c.red;
-				rgbData[(i*this.imageWidth + j)*3+1] = c.green;
-				rgbData[(i*this.imageWidth + j)*3+2] = c.blue;
+				rgbData[(i*this.imageWidth + j)*3] = (byte)(c.red*255);
+				rgbData[(i*this.imageWidth + j)*3+1] = (byte)(c.green*255);
+				rgbData[(i*this.imageWidth + j)*3+2] = (byte)(c.blue*255);
 			}
 		}
 		long endTime = System.currentTimeMillis();
@@ -312,7 +312,7 @@ public class RayTracer {
 			returnColor.scalarProduct(1-ray.surface.getTransparency());
 			//if(ray.surface.getTransparency() > 0)
 			//	returnColor = returnColor.add(getBackGroundColor(ray,time+1).scalarProduct(ray.surface.getTransparency()));
-			return returnColor;//.add(getReflectionColor(ray,time+1));
+			return returnColor.add(getReflectionColor(ray,time+1));
 		}
 		else
 			return this.backgroundColor;
@@ -355,7 +355,8 @@ public class RayTracer {
 		Vector lightReflection = lightDirection.add(b).toUnitVector();
 		float cos = Vector.dotProduct(ray.toCam, lightReflection)/(ray.toCam.getLength()*lightReflection.getLength());
 		//System.out.println(ray.surface.getSpecularColor());
-		Color c = ray.surface.getSpecularColor().multiply(light.color).scalarProduct((float)(Math.pow(cos, ray.surface.getPhong())));//*light.specularIntensity));
+		Color c = ray.surface.getSpecularColor().multiply(light.color).
+				scalarProduct((float)(Math.pow(cos, ray.surface.getPhong()*light.specularIntensity)));
 		return c;
 	}
 	

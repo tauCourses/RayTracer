@@ -64,7 +64,7 @@ public class Light {
 		for(int i=0;i<rootNumberOfShadowRays;i++)
 			for(int j=0;j<rootNumberOfShadowRays;j++)
 				numOfHits += this.isHitByLight(ray.intersection, 
-						mostLeftUp.add(tempX.scalarProduct(i).add(tempY).scalarProduct(j)), surfaces,ray.surface);
+						mostLeftUp.add(tempX.scalarProduct(i)).add(tempY.scalarProduct(j)), surfaces,ray.surface);
 			
 		
 		
