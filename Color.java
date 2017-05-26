@@ -29,13 +29,18 @@ public class Color {
 	{
 		int red=this.red&0xff,green=this.green&0xff,blue=this.blue&0xff;
 		
+		//System.out.print(this + " " + c);
 		red += c.red&0xff;
 		green += c.green&0xff;
 		blue += c.blue&0xff;
 		
-		return new Color(	(byte)(red),
+		//System.out.println(" " + red + " " + (byte)(red));
+		
+		Color co =  new Color(	(byte)(red),
 							(byte)(green),
 							(byte)(blue) );
+		//System.out.println("dfggd - " + co);
+		return co;
 	}
 	
 	public Color multiply(Color c)
@@ -59,5 +64,9 @@ public class Color {
 		return new Color(	(byte)(red*d),
 							(byte)(green*d),
 							(byte)(blue*d) );
+	}
+	public String toString()
+	{
+		return ("("+this.red+", "+this.green+", "+this.blue+")");
 	}
 }

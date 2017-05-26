@@ -92,6 +92,12 @@ public class Vector {
 		return ("("+this.x+", "+this.y+", "+this.z+")");
 	}
 	
+	public boolean equal(Vector v)
+	{
+		if(this.x == v.x && this.y == v.y && this.z == v.z)
+			return true;
+		return false;
+	}
 	
 	
 }
