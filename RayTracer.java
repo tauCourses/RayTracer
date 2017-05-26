@@ -200,7 +200,9 @@ public class RayTracer {
 	 */
 	public void renderScene(String outputFileName)
 	{
-		//this.numberOfShadowRays = 1;
+		this.numberOfShadowRays = 1;
+		this.squareNumberOfShadowRays = this.numberOfShadowRays * this.numberOfShadowRays;
+		System.out.println("shadow rays - " + this.numberOfShadowRays);
 	//	this.superSampelingLevel = 1;
 		long startTime = System.currentTimeMillis();
 		this.camara.createScreen(this.imageWidth, this.imageHeight, this.superSampelingLevel);
@@ -294,9 +296,9 @@ public class RayTracer {
 	
 	private Color getColorFromRay(Ray ray, int time)
 	{
-		if(ray.d < Float.MAX_VALUE && time < this.maximumRecursionLevel)
+		if(ray.d < Float.MAX_VALUE-3 && time < this.maximumRecursionLevel)
 		{					
-
+			//System.out.println(ray.surface.getSpecularColor());
 			Color returnColor = this.black;
 			for (Light currentLight : this.lights)
 			{
@@ -308,9 +310,9 @@ public class RayTracer {
 				}
 			}
 			returnColor.scalarProduct(1-ray.surface.getTransparency());
-			if(ray.surface.getTransparency() > 0)
-				returnColor = returnColor.add(getBackGroundColor(ray,time+1).scalarProduct(ray.surface.getTransparency()));
-			return returnColor.add(getReflectionColor(ray,time+1));
+			//if(ray.surface.getTransparency() > 0)
+			//	returnColor = returnColor.add(getBackGroundColor(ray,time+1).scalarProduct(ray.surface.getTransparency()));
+			return returnColor;//.add(getReflectionColor(ray,time+1));
 		}
 		else
 			return this.backgroundColor;
@@ -319,12 +321,15 @@ public class RayTracer {
 	
 	private Color getBackGroundColor(Ray ray, int time)
 	{		
-		//System.out.println("fsd");
 		Ray newRay = new Ray();
 		newRay.setNewRay(ray.intersection,ray.direction);
 		
 		for(iSurface surface: surfaces)
+		{
+			if(surface == ray.surface)
+				continue;
 			surface.intersectes(newRay);
+		}
 		newRay.getIntersection();
 		
 		return getColorFromRay(newRay, time);
@@ -332,35 +337,26 @@ public class RayTracer {
 	
 	private Color getDiffusedColor(Ray ray, Light light, int numOfLightHits) //need to be complete:
 	{
-		Color resultDiffuseColor = this.black;
-		Color lightIntensity;
-		lightIntensity = light.color;
+		Color lightIntensity = light.color;
 		//System.out.println(lightIntensity);
 		if (numOfLightHits == 0)
-			//return this.black;//ray.surface.getSpecularColor();
 			lightIntensity = lightIntensity.scalarProduct(1-light.shadowIntensity);
-		else
-			//return this.white;//ray.surface.getDiffuseColor();
+		else	
 			lightIntensity = lightIntensity.scalarProduct((float)(numOfLightHits)/this.squareNumberOfShadowRays);
-		
-		resultDiffuseColor = resultDiffuseColor.add(lightIntensity);
-		
-		//System.out.println(resultDiffuseColor);
-		resultDiffuseColor = ray.surface.getDiffuseColor().multiply(resultDiffuseColor);
+		 
 		//System.out.println("a - " +resultDiffuseColor);
-		return resultDiffuseColor;
-		
+		return ray.surface.getDiffuseColor().multiply(lightIntensity);		
 	}
 
 	private Color getSpecularColor(Ray ray, Light light) //need to be complete:
 	{
-		Vector lightDirection = light.position.subtruct(ray.intersection);
+		Vector lightDirection = ray.intersection.subtruct(light.position);
 		Vector b = lightDirection.getProjection(ray.getNormal()).scalarProduct(-2);
-		Vector lightReflection = lightDirection.add(b);
+		Vector lightReflection = lightDirection.add(b).toUnitVector();
 		float cos = Vector.dotProduct(ray.toCam, lightReflection)/(ray.toCam.getLength()*lightReflection.getLength());
-		//System.out.println( ray.surface.getSpecularColor());
-		return ray.surface.getSpecularColor().multiply(light.color).scalarProduct((float)(Math.pow(cos, ray.surface.getPhong())*light.specularIntensity));
-		
+		//System.out.println(ray.surface.getSpecularColor());
+		Color c = ray.surface.getSpecularColor().multiply(light.color).scalarProduct((float)(Math.pow(cos, ray.surface.getPhong())));//*light.specularIntensity));
+		return c;
 	}
 	
 	private Color getReflectionColor(Ray ray, int time)

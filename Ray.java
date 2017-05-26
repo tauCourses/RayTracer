@@ -29,7 +29,7 @@ public class Ray {
 	public void setNewRay(Vector origin, Vector direction)
 	{
 		this.origin = origin;
-		this.direction = direction;
+		this.direction = direction.toUnitVector();
 		this.d = Float.MAX_VALUE;
 		this.toCam = this.direction.scalarProduct(-1);
 	}
