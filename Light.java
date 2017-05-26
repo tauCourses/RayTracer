@@ -7,6 +7,7 @@ public class Light {
 	float shadowIntensity;
 	float radius;
 	int numberOfShadowRays;
+	Ray lightRay;
 	
 	public Light(Vector position, Color color,float specularIntensity, float shadowIntensity, float radius)
 	{
@@ -18,9 +19,18 @@ public class Light {
 		this.numberOfShadowRays = numberOfShadowRays;
 	}
 	
-
-	public boolean isHitByLight()
+	public int isHitByLight(Vector intersection, Vector currentLightVector, iSurface[] surfaces)
 	{
+		this.lightRay.setNewRay(currentLightVector, intersection);
+		float distanceToIntersection = currentLightVector.subtruct(intersection).getLength();
+		for (iSurface currentSurface : surfaces)
+		{
+			currentSurface.intersectes(this.lightRay);
+			if (this.lightRay.d < distanceToIntersection)
+				return 0;
+		}
+		return 1;
+		
 		/*Ray LightRay = new Ray(this.position, new Vector(collisionOnSurface.position));
 		float distanceLightTocollision = (new Vector(this.position, collisionOnSurface.position)).getLength();
 		collisionOnSurface.surface.intersectes(LightRay);
