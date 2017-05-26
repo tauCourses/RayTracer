@@ -30,11 +30,11 @@ public class RayTracer {
 	
 	private iSurface[] surfaces;
 	private Color backgroundColor;
-//	private int numberOfShadowRays;
+	private int numberOfShadowRays;
 	private int maximumRecursionLevel;
 	private int superSampelingLevel;
 	private Color black;
-	//private ArrayList<Light> lights;
+	private ArrayList<Light> lights;
 	/**
 	 * Runs the ray tracer. Takes scene file, output image file and image size as input.
 	 */
@@ -43,6 +43,8 @@ public class RayTracer {
 		this.black = new Color("0","0","0");
 		this.materialList = new ArrayList<>();
 		this.surfacesTemp = new ArrayList<>();
+		this.lights = new ArrayList<>();
+
 	}
 	public static void main(String[] args) throws IOException, RayTracerException {
 		//try {
@@ -125,7 +127,7 @@ public class RayTracer {
 				else if (code.equals("set"))
 				{
 					backgroundColor = new Color(params[0],params[1],params[2]);
-//					this.numberOfShadowRays = Integer.valueOf(params[3]);
+					this.numberOfShadowRays = Integer.valueOf(params[3]);
 					this.maximumRecursionLevel = Integer.valueOf(params[4]);
 					this.superSampelingLevel = Integer.valueOf(params[5]);
 					//System.out.println(String.format("Parsed sets parameters (line %d)", lineNum));
@@ -168,8 +170,12 @@ public class RayTracer {
 				}
 				else if (code.equals("lgt"))
 				{
-					//Light light = new Light(new Point(params[0], params[1],params[2]), new Color(params[3],params[4],params[5]), Double.valueOf(params[6]), Double.valueOf(params[7]), Double.valueOf(params[8]));
-					//this.lights.add(light);
+					Light light = new Light(new Vector(params[0], params[1],params[2]), 
+											new Color(params[3],params[4],params[5]), 
+											Float.valueOf(params[6]), 
+											Float.valueOf(params[7]), 
+											Float.valueOf(params[8]));
+					this.lights.add(light);
 
 					//System.out.println(String.format("Parsed light (line %d)", lineNum));
 				}
