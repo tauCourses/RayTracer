@@ -69,9 +69,7 @@ public class Camara {
 			for(int p=0;p<this.superSamplingLevel;p++)
 			{
 				Vector inPixelPoint = pixelPoint.add(this.inPixelWidthDirection.scalarProduct((float)(p)).add(this.inPixelHeightDirection.scalarProduct((float)(k))));
-				rays[t].origin = inPixelPoint;
-				rays[t].direction = new Vector(this.location, pixelPoint).toUnitVector();
-				rays[t].d = Float.MAX_VALUE;
+				rays[t].setNewRay(inPixelPoint, new Vector(this.location, pixelPoint).toUnitVector());
 				t++;
 			}
 		}

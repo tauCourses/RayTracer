@@ -13,6 +13,7 @@ public class Sphere extends AbstractSurface{
 	@Override
 	public void intersectes(Ray ray) {
 		float a = ray.direction.getLengthSquare();
+	//	System.out.println(ray.origin);
 		float b = 2*(Vector.dotProduct(ray.direction, ray.origin.subtruct(this.center)));
 		float c = 	new Vector(ray.origin, this.center).getLengthSquare() - this.squaredRadius;
 		float determinante = b*b-4*a*c;

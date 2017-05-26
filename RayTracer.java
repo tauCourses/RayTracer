@@ -210,7 +210,7 @@ public class RayTracer {
 		for(int i=0; i< surfaces.length; i++)
 			this.surfaces[i] = this.surfacesTemp.get(i);
 		for(int i=0; i< rays.length; i++)
-			rays[i] = new Ray(new Vector(0,0,0), new Vector(0,0,0));
+			rays[i] = new Ray();
 		for(int i=0;i<this.imageHeight;i++)
 		{
 			//System.out.println(i);
@@ -222,7 +222,7 @@ public class RayTracer {
 				{
 					for(iSurface surface: surfaces)
 						surface.intersectes(rays[k]);
-					//System.out.println(rays[k].d);
+					
 					rays[k].getIntersection();
 					colors[k] = getColorFromRay(rays[k],1);
 				}
@@ -296,11 +296,11 @@ public class RayTracer {
 	{
 		if(ray.d < Float.MAX_VALUE && time < this.maximumRecursionLevel)
 		{					
-			Color returnColor = getDiffusedColor(ray).add(getSpecularColor(ray)).scalarProduct(1-ray.surface.getTransparency());
+			Color returnColor = getDiffusedColor(ray);//.add(getSpecularColor(ray)).scalarProduct(1-ray.surface.getTransparency());
 			if(ray.surface.getTransparency() > 0)
 				returnColor = returnColor.add(getBackGroundColor(ray,time+1).scalarProduct(ray.surface.getTransparency()));
-		
-			return returnColor;//.add(getReflectionColor(ray,time+1));
+			
+			return returnColor.add(getReflectionColor(ray,time+1));
 		}
 		else
 			return this.backgroundColor;
@@ -309,10 +309,13 @@ public class RayTracer {
 	
 	private Color getBackGroundColor(Ray ray, int time)
 	{		
-		System.out.println("sdf");
-		Ray newRay = new Ray(ray.intersection,ray.direction);
+		Ray newRay = new Ray();
+		newRay.setNewRay(ray.intersection,ray.direction);
+		
 		for(iSurface surface: surfaces)
 			surface.intersectes(newRay);
+		newRay.getIntersection();
+		
 		return getColorFromRay(newRay, time);
 	}
 	
@@ -320,18 +323,22 @@ public class RayTracer {
 	{
 		return ray.surface.getDiffuseColor();//.scalarProduct(0.8f);
 	}
-	private Color getSpecularColor(Ray ray) //need to be complete:
+	private Color getSpecularColor(Ray ray, Light light) //need to be complete:
 	{
-		return this.black;//ray.surface.getSpecularColor();//.scalarProduct(0.002f);
+		Vector lightDirection = light.position.subtruct(ray.intersection);
+		Vector b = lightDirection.getProjection(ray.getNormal()).scalarProduct(-2);
+		Vector lightReflection = lightDirection.add(b);
+		float cos = Vector.dotProduct(ray.toCam, lightReflection)/(ray.toCam.getLength()*lightReflection.getLength());
+		return ray.surface.getSpecularColor().multiply(light.color).scalarProduct((float)(Math.pow(cos, ray.surface.getPhong())*light.specularIntensity));
+		
 	}
 	
 	private Color getReflectionColor(Ray ray, int time)
 	{
 		Vector b = ray.direction.getProjection(ray.getNormal()).scalarProduct(-2);
 		Color c = ray.surface.getReflectionColor();
-		ray.direction = ray.direction.add(b);
-		ray.origin = ray.intersection;
-		ray.d = Float.MAX_VALUE;
+		ray.setNewRay(ray.intersection, ray.direction.add(b));
+		
 		for(iSurface surface: this.surfaces)
 			surface.intersectes(ray);
 		

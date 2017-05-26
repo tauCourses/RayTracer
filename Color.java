@@ -51,7 +51,7 @@ public class Color {
 							(byte)(blue/255) );
 	}
 	
-	public Color scalarProduct(double d)
+	public Color scalarProduct(float d)
 	{
 		int red=this.red&0xff,green=this.green&0xff,blue=this.blue&0xff;
 		
