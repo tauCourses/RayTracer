@@ -1,30 +1,28 @@
 
 public class Sphere extends AbstractSurface{
-	Point center;
-	double radius;
-	public Sphere(Material material, Point center, double radius) {
+	public Vector center;
+	float radius;
+	float squaredRadius;
+	public Sphere(Material material, Vector center, float radius) {
 		super(material);
 		this.center = center;
 		this.radius = radius;
+		this.squaredRadius = this.radius*this.radius;
 	}
 
 	@Override
 	public void intersectes(Ray ray) {
-		double a = ray.direction.x*ray.direction.x + ray.direction.y*ray.direction.y + ray.direction.z*ray.direction.z;
-		double b = 2*(	ray.direction.x*(ray.origin.x-this.center.x) + 
-						ray.direction.y*(ray.origin.y-this.center.y) + 
-						ray.direction.z*(ray.origin.z-this.center.z) );
-		double c = 	(ray.origin.x-this.center.x)*(ray.origin.x-this.center.x) +
-					(ray.origin.y-this.center.y)*(ray.origin.y-this.center.y) +
-					(ray.origin.z-this.center.z)*(ray.origin.z-this.center.z) - this.radius*this.radius;
-		double determinante = b*b-4*a*c;
+		float a = ray.direction.getLengthSquare();
+		float b = 2*(Vector.dotProduct(ray.direction, ray.origin.subtruct(this.center)));
+		float c = 	new Vector(ray.origin, this.center).getLengthSquare() - this.squaredRadius;
+		float determinante = b*b-4*a*c;
 		if(determinante>=0)
 		{		
-			double d = ((-b - Math.sqrt(determinante))/2);
-			if(d>=0)
+			float d = (float)((-b - Math.sqrt(determinante))/2);
+			if(d>0 && d< ray.d)
 			{
-				Point intersectionPoint = ray.origin.add(ray.direction.scalarProduct(d));
-				ray.collisions.add(new Collision(this, intersectionPoint , d, new Vector(this.center, intersectionPoint).toUnitVector()));
+				ray.d = d;
+				ray.surface = this;
 			}
 		}
 	}

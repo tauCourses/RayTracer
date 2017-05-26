@@ -26,26 +26,29 @@ public class RayTracer {
 	public int imageHeight;
 	private Camara camara;
 	private ArrayList<Material> materialList; 
-	private ArrayList<iSurface> surfaces;
+	private ArrayList<iSurface> surfacesTemp;
 	
+	private iSurface[] surfaces;
 	private Color backgroundColor;
 //	private int numberOfShadowRays;
 	private int maximumRecursionLevel;
 	private int superSampelingLevel;
+	private Color black;
 	//private ArrayList<Light> lights;
 	/**
 	 * Runs the ray tracer. Takes scene file, output image file and image size as input.
 	 */
 	public RayTracer()
 	{
+		this.black = new Color("0","0","0");
 		this.materialList = new ArrayList<>();
-		this.surfaces = new ArrayList<>();
+		this.surfacesTemp = new ArrayList<>();
 	}
 	public static void main(String[] args) throws IOException, RayTracerException {
 		//try {
-						
-			RayTracer tracer = new RayTracer();
+		RayTracer tracer = new RayTracer();
 
+		 	
             // Default values:
 			tracer.imageWidth = 500;
 			tracer.imageHeight = 500;
@@ -112,11 +115,11 @@ public class RayTracer {
 				{
 					//System.out.println(line);
 					
-					this.camara = new Camara(	new Point(params[0],params[1],params[2]),
-												new Point(params[3],params[4],params[5]),
+					this.camara = new Camara(	new Vector(params[0],params[1],params[2]),
+												new Vector(params[3],params[4],params[5]),
 												new Vector(params[6],params[7],params[8]),
-												Double.valueOf(params[9]),
-												Double.valueOf(params[10]));
+												Float.valueOf(params[9]),
+												Float.valueOf(params[10]));
 					//System.out.println(String.format("Parsed camera parameters (line %d)", lineNum));
 				}
 				else if (code.equals("set"))
@@ -133,34 +136,34 @@ public class RayTracer {
                     Material material = new Material(new Color(params[0],params[1],params[2]),
                     							new Color(params[3],params[4],params[5]),
                     							new Color(params[6],params[7],params[8]),
-                    							Double.valueOf(params[9]), 
-                    							Double.valueOf(params[10]));
+                    							Float.valueOf(params[9]), 
+                    							Float.valueOf(params[10]));
                     this.materialList.add(material);
 				//	System.out.println(String.format("Parsed material (line %d)", lineNum));
 				}
 				else if (code.equals("sph"))
 				{
 					Sphere sphere = new Sphere(this.materialList.get(Integer.valueOf(params[4])-1),
-												new Point(params[0],params[1],params[2]),
-												Double.valueOf(params[3]));
-					this.surfaces.add(sphere);
+												new Vector(params[0],params[1],params[2]),
+												Float.valueOf(params[3]));
+					this.surfacesTemp.add(sphere);
 			//		System.out.println(String.format("Parsed sphere (line %d)", lineNum));
 				}
 				else if (code.equals("pln"))
 				{
 					infinityPlane infinityPlane = new infinityPlane(this.materialList.get(Integer.valueOf(params[4])-1),
                     												new Vector(params[0],params[1],params[2]), 
-                    												Double.valueOf(params[3]));
-                    this.surfaces.add(infinityPlane);
+                    												Float.valueOf(params[3]));
+                    this.surfacesTemp.add(infinityPlane);
 		//			System.out.println(String.format("Parsed plane (line %d)", lineNum));
 				}
 				else if (code.equals("trg"))
 				{
                     Triangle triangle = new Triangle(this.materialList.get(Integer.valueOf(params[9])-1),
-                    								new Point(params[0],params[1],params[2]), 
-                    								new Point(params[3],params[4],params[5]), 
-                    								new Point(params[6],params[7],params[8]));
-                    this.surfaces.add(triangle);
+                    								new Vector(params[0],params[1],params[2]), 
+                    								new Vector(params[3],params[4],params[5]), 
+                    								new Vector(params[6],params[7],params[8]));
+                    this.surfacesTemp.add(triangle);
 	//				System.out.println(String.format("Parsed cylinder (line %d)", lineNum));
 				}
 				else if (code.equals("lgt"))
@@ -189,23 +192,35 @@ public class RayTracer {
 	 */
 	public void renderScene(String outputFileName)
 	{
+	//	this.superSampelingLevel = 1;
 		long startTime = System.currentTimeMillis();
 		this.camara.createScreen(this.imageWidth, this.imageHeight, this.superSampelingLevel);
 		// Create a byte array to hold the pixel data:
 		byte[] rgbData = new byte[this.imageWidth * this.imageHeight * 3];
+		//System.out.println(this.surfaces.size());
+		Ray[] rays = new Ray[this.superSampelingLevel*this.superSampelingLevel];
+		Color[] colors = new Color[this.superSampelingLevel*this.superSampelingLevel];
+		this.surfaces = new iSurface[this.surfacesTemp.size()];
+		for(int i=0; i< surfaces.length; i++)
+			this.surfaces[i] = this.surfacesTemp.get(i);
+		for(int i=0; i< rays.length; i++)
+			rays[i] = new Ray(new Vector(0,0,0), new Vector(0,0,0));
 		for(int i=0;i<this.imageHeight;i++)
 		{
+			//System.out.println(i);
 			for(int j=0;j<this.imageWidth;j++)
 			{
-				ArrayList<Ray> rays = this.camara.getScreenVectors(i, j);
-				ArrayList<Color> raysColors = new ArrayList<>();
-				for(Ray ray:rays)
+				this.camara.getScreenVectors(rays,i,j);
+			
+				for(int k=0; k< rays.length; k++)
 				{
-					for(iSurface surface: this.surfaces)
-						surface.intersectes(ray);
-					raysColors.add(getColorFromRay(ray,1));
+					for(iSurface surface: surfaces)
+						surface.intersectes(rays[k]);
+					//System.out.println(rays[k].d);
+					rays[k].getIntersection();
+					colors[k] = getColorFromRay(rays[k],1);
 				}
-				Color c = Color.average(raysColors);
+				Color c = Color.average(colors);
 				rgbData[(i*this.imageWidth + j)*3] = c.red;
 				rgbData[(i*this.imageWidth + j)*3+1] = c.green;
 				rgbData[(i*this.imageWidth + j)*3+2] = c.blue;
@@ -273,13 +288,13 @@ public class RayTracer {
 	
 	private Color getColorFromRay(Ray ray, int time)
 	{
-		if(ray.collisions.size() > 0 && time <= this.maximumRecursionLevel)
+		if(ray.d < Float.MAX_VALUE && time < this.maximumRecursionLevel)
 		{					
-			Collections.sort(ray.collisions);
-			iSurface first = ray.collisions.get(0).surface;
-			return getBackGroundColor(ray,time+1).scalarProduct(first.getTransparency()).add(
-					getDiffusedColor(ray).add(getSpecularColor(ray)).scalarProduct(1-first.getTransparency())).add(
-							getReflectionColor(ray,time+1));
+			Color returnColor = getDiffusedColor(ray).add(getSpecularColor(ray)).scalarProduct(1-ray.surface.getTransparency());
+			if(ray.surface.getTransparency() > 0)
+				returnColor = returnColor.add(getBackGroundColor(ray,time+1).scalarProduct(ray.surface.getTransparency()));
+		
+			return returnColor;//.add(getReflectionColor(ray,time+1));
 		}
 		else
 			return this.backgroundColor;
@@ -287,34 +302,36 @@ public class RayTracer {
 	}
 	
 	private Color getBackGroundColor(Ray ray, int time)
-	{
-		if(ray.collisions.size() <= 1)
-			return this.backgroundColor;
-		
-		Ray newRay = new Ray(ray.collisions.get(0).position,ray.direction);
-		for(int i=1; i<ray.collisions.size(); i++)
-			newRay.collisions.add(ray.collisions.get(i));
-		
+	{		
+		System.out.println("sdf");
+		Ray newRay = new Ray(ray.intersection,ray.direction);
+		for(iSurface surface: surfaces)
+			surface.intersectes(newRay);
 		return getColorFromRay(newRay, time);
 	}
 	
-	private Color getDiffusedColor(Ray ray)
+	private Color getDiffusedColor(Ray ray) //need to be complete:
 	{
-		return ray.collisions.get(0).surface.getDiffuseColor();
+		return ray.surface.getDiffuseColor();//.scalarProduct(0.8f);
 	}
-	private Color getSpecularColor(Ray ray)
+	private Color getSpecularColor(Ray ray) //need to be complete:
 	{
-		return ray.collisions.get(0).surface.getSpecularColor();
+		return this.black;//ray.surface.getSpecularColor();//.scalarProduct(0.002f);
 	}
 	
 	private Color getReflectionColor(Ray ray, int time)
 	{
-		Vector b = ray.direction.getProjection(ray.collisions.get(0).normal).scalarProduct(-2);
-		Vector newDirection = ray.direction.add(b);
-		Ray newRay = new Ray(ray.collisions.get(0).position,newDirection);
+		Vector b = ray.direction.getProjection(ray.getNormal()).scalarProduct(-2);
+		Color c = ray.surface.getReflectionColor();
+		ray.direction = ray.direction.add(b);
+		ray.origin = ray.intersection;
+		ray.d = Float.MAX_VALUE;
 		for(iSurface surface: this.surfaces)
-			surface.intersectes(newRay);
-		return getColorFromRay(newRay,time).multiply(ray.collisions.get(0).surface.getReflectionColor());
+			surface.intersectes(ray);
+		
+		ray.getIntersection();
+		
+		return c.multiply(getColorFromRay(ray,time));
 	}
 
 }

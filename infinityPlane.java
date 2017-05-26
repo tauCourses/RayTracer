@@ -1,25 +1,29 @@
 
 public class infinityPlane extends AbstractSurface {
-	Vector normal;
-	double offset;
-	Point p;
-	
-	public infinityPlane(Material material, Vector normal, double offset)
+	public Vector normal;
+	float offset;
+	Vector p;
+	float b;
+	public infinityPlane(Material material, Vector normal, float offset)
 	{
 		super(material);
 		this.normal = normal.toUnitVector();
 		this.offset = offset;
-		p = new Point(0,0,0).add(this.normal.scalarProduct(this.offset));
+		p = this.normal.scalarProduct(this.offset);
+		b = Vector.dotProduct(p, normal);
 	}
 	
-
 	@Override
-	public void intersectes(Ray ray) {
+	public void intersectes(Ray ray) 
+	{
 		Vector temp = new Vector(ray.origin, p);
-		double sigma = Vector.dotProduct(temp, normal)/ Vector.dotProduct(ray.direction, this.normal);
-		if(sigma>=0)	
-			ray.collisions.add(new Collision(this, ray.origin.add(ray.direction.scalarProduct(sigma)), sigma, this.normal));
-		
+		float sigma = Vector.dotProduct(temp, normal)/ Vector.dotProduct(ray.direction, this.normal);
+		if(sigma>0 && sigma<ray.d)
+		{
+			//System.out.println(sigma +" "+ ray.d);			
+			ray.d = sigma;
+			ray.surface = this;
+		}
 	}
 
 }

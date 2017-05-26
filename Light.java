@@ -1,12 +1,12 @@
 
 public class Light {
-	Point position;
+	Vector position;
 	Color color;
-	double specularIntensity;
-	double shadowIntensity;
-	double radius;
+	float specularIntensity;
+	float shadowIntensity;
+	float radius;
 	
-	public Light(Point position, Color color,Double specularIntensity, Double shadowIntensity, Double radius)
+	public Light(Vector position, Color color,float specularIntensity, float shadowIntensity, float radius)
 	{
 		this.position = position;
 		this.color = color;
@@ -15,12 +15,12 @@ public class Light {
 		this.radius = radius;
 	}
 	
-	public boolean isHitByLight(Collision collisionOnSurface)
+	public boolean isHitByLight()
 	{
-		Ray LightRay = new Ray(this.position, new Vector(collisionOnSurface.position));
-		double distanceLightTocollision = (new Vector(this.position, collisionOnSurface.position)).getLength();
+		/*Ray LightRay = new Ray(this.position, new Vector(collisionOnSurface.position));
+		float distanceLightTocollision = (new Vector(this.position, collisionOnSurface.position)).getLength();
 		collisionOnSurface.surface.intersectes(LightRay);
-		double closestDistance = LightRay.collisions.get(0).distance;
+		float closestDistance = LightRay.collisions.get(0).distance;
 		for (Collision currentCollision : LightRay.collisions)
 		{
 			if (closestDistance > currentCollision.distance)
@@ -29,7 +29,7 @@ public class Light {
 		if ((distanceLightTocollision == closestDistance) & (distanceLightTocollision != 0))
 		{
 			return true;
-		}
+		}*/
 		return false;
 	}
 	

@@ -18,11 +18,11 @@ public abstract class AbstractSurface implements iSurface{
 		return this.material.getReflectionColor();
 	}
 	@Override
-	public double getPhong() {
+	public float getPhong() {
 		return this.material.getPhong();
 	}
 	@Override
-	public double getTransparency() {
+	public float getTransparency() {
 		return this.material.getTransparency();
 	}
 }

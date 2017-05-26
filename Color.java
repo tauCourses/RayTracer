@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Color {
 	public final byte red,green,blue; //haha you can't change it !
 	public Color(byte red,byte green,byte blue)
@@ -14,7 +12,7 @@ public class Color {
 		this.green = (byte) ((int)(Float.valueOf(green)*256) & 0xFF) ;
 		this.blue = (byte) ((int)(Float.valueOf(blue)*256) & 0xFF) ;
 	}
-	public static Color average(ArrayList<Color> arr)
+	public static Color average(Color[] arr)
 	{
 		int red=0,green=0,blue=0;
 		for(Color c:arr)
@@ -23,9 +21,9 @@ public class Color {
 			green += c.green&0xff;
 			blue += c.blue&0xff;
 		}
-		return new Color(	(byte)(red/arr.size()),
-							(byte)(green/arr.size()),
-							(byte)(blue/arr.size()) );
+		return new Color(	(byte)(red/arr.length),
+							(byte)(green/arr.length),
+							(byte)(blue/arr.length) );
 	}
 	public Color add(Color c)
 	{

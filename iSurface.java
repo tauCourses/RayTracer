@@ -4,6 +4,6 @@ public interface iSurface {
 	public Color getDiffuseColor();
 	public Color getSpecularColor();
 	public Color getReflectionColor();
-	public double getPhong();
-	public double getTransparency();
+	public float getPhong();
+	public float getTransparency();
 }
