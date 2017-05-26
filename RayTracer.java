@@ -31,6 +31,7 @@ public class RayTracer {
 	private iSurface[] surfaces;
 	private Color backgroundColor;
 	private int numberOfShadowRays;
+	private int squareNumberOfShadowRays;
 	private int maximumRecursionLevel;
 	private int superSampelingLevel;
 	private Color black;
@@ -128,6 +129,7 @@ public class RayTracer {
 				{
 					backgroundColor = new Color(params[0],params[1],params[2]);
 					this.numberOfShadowRays = Integer.valueOf(params[3]);
+					this.squareNumberOfShadowRays = this.numberOfShadowRays*this.numberOfShadowRays; 
 					this.maximumRecursionLevel = Integer.valueOf(params[4]);
 					this.superSampelingLevel = Integer.valueOf(params[5]);
 					//System.out.println(String.format("Parsed sets parameters (line %d)", lineNum));
@@ -296,10 +298,17 @@ public class RayTracer {
 	{
 		if(ray.d < Float.MAX_VALUE && time < this.maximumRecursionLevel)
 		{					
-			Color returnColor = getDiffusedColor(ray).add(getSpecularColor(ray)).scalarProduct(1-ray.surface.getTransparency());
+			Color returnColor = this.black;
+			for (Light currentLight : this.lights)
+			{
+				int numOfLightHits = currentLight.numOfLightHits(ray.intersection);
+				returnColor.add(getDiffusedColor(ray,currentLight, numOfLightHits));
+				if (numOfLightHits > 0)
+					returnColor.add(getSpecularColor(ray,currentLight));
+			}
+			returnColor.scalarProduct(1-ray.surface.getTransparency());
 			if(ray.surface.getTransparency() > 0)
 				returnColor = returnColor.add(getBackGroundColor(ray,time+1).scalarProduct(ray.surface.getTransparency()));
-		
 			return returnColor;//.add(getReflectionColor(ray,time+1));
 		}
 		else
@@ -316,11 +325,23 @@ public class RayTracer {
 		return getColorFromRay(newRay, time);
 	}
 	
-	private Color getDiffusedColor(Ray ray) //need to be complete:
+	private Color getDiffusedColor(Ray ray, Light currentLight, int numOfLightHits) //need to be complete:
 	{
+		Color resultDiffuseColor = this.black;
+		Color lightIntensity;
+		//for (Light currentLight : this.lights)
+		//{
+		lightIntensity = currentLight.color.scalarProduct(numOfLightHits/this.squareNumberOfShadowRays);
+		if (numOfLightHits == 0)
+			lightIntensity = lightIntensity.scalarProduct(1-currentLight.shadowIntensity);
+		resultDiffuseColor.add(lightIntensity);
+		//}
+		resultDiffuseColor = ray.surface.getDiffuseColor().multiply(resultDiffuseColor);
+		return resultDiffuseColor;
+		
 		return ray.surface.getDiffuseColor();//.scalarProduct(0.8f);
 	}
-	private Color getSpecularColor(Ray ray) //need to be complete:
+	private Color getSpecularColor(Ray ray, Light currentLight) //need to be complete:
 	{
 		return this.black;//ray.surface.getSpecularColor();//.scalarProduct(0.002f);
 	}
