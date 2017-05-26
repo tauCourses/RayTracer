@@ -61,14 +61,12 @@ public class Vector {
 		return normalized;
 	}
 	
-<<<<<<< HEAD
-	public float getLengthSquare()
-=======
+
 	public Vector getPerpendicular()
 	{
-		double newX = 1;
-		double newY = 1;
-		double newZ = 1;
+		float newX = 1;
+		float newY = 1;
+		float newZ = 1;
 		if (this.x != 0)
 			newX = 0;
 		else
@@ -79,8 +77,7 @@ public class Vector {
 		return crossProduct(crossProduct(this, new Vector(newX,newY,newZ)), this);
 	}
 	
-	public double getLengthSquare()
->>>>>>> 3c42ebc1b68050de161ee5310774032664d29882
+	public float getLengthSquare()
 	{
 		return (this.x*this.x + this.y*this.y + this.z*this.z);
 	}
