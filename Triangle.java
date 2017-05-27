@@ -28,7 +28,7 @@ public class Triangle extends AbstractSurface{
 		if(temp == 0)
 			return;
 		float d = -(Vector.dotProduct(this.normal, ray.origin) - this.offset) / temp; 
-		if(d<=0 || d > ray.d)
+		if(d<=this.epsilon || d +  this.epsilon > ray.d)
 			return;
 		
 		Vector intersection = ray.origin.add(ray.direction.scalarProduct(d));

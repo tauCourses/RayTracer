@@ -1,7 +1,7 @@
 
 public class Light {
 	Vector position;
-	Vector lightDirection;
+	public Vector direction;
 	Color color;
 	
 	float specularIntensity;
@@ -10,6 +10,7 @@ public class Light {
 	int numberOfShadowRays;
 	Ray ray;
 	Vector v1,v2;
+	public int mainRay; //does the ray from the center hit the surface 
 	
 	public Light(Vector position, Color color,float specularIntensity, float shadowIntensity, float radius)
 	{
@@ -18,7 +19,6 @@ public class Light {
 		this.specularIntensity = specularIntensity;
 		this.shadowIntensity = shadowIntensity;
 		this.radius = radius;
-		this.numberOfShadowRays = numberOfShadowRays;
 		this.ray = new Ray();
 		v1 = new Vector(1,1,1);
 		v2 = new Vector(1,0,0);
@@ -28,32 +28,37 @@ public class Light {
 	{
 		this.ray.setNewRay(currentLightVector, intersection.subtruct(currentLightVector).toUnitVector());
 		
-		float distanceToIntersection = currentLightVector.subtruct(intersection).getLength();
-		this.ray.d = distanceToIntersection;
-		
+		float distanceToIntersection = currentLightVector.subtruct(intersection).getLength() - AbstractSurface.epsilon;
+		//System.out.println(distanceToIntersection);
+	//	this.ray.d = distanceToIntersection;
+		//System.out.println("a" + this.ray.d);
+		//System.out.println(this.ray.d);
+	////	System.out.println("s" + this.ray.d*0.99999f);
 		for (iSurface surface : surfaces)
 		{
-			if(surface == toIgnure)
-				continue;
+			//if(surface == toIgnure)
+			//	continue;
 			surface.intersectes(this.ray);
 			if (this.ray.d < distanceToIntersection)
 				return 0;
 		}
+		//System.out.println("SD");
 		return 1;
 		
 	}
 	
 	public int numOfLightRaysHits(Ray ray, iSurface[] surfaces, int rootNumberOfShadowRays )
 	{
-		lightDirection =  ray.intersection.subtruct(this.position);
+		this.direction =  ray.intersection.subtruct(this.position).toUnitVector();
+		this.mainRay = this.isHitByLight(ray.intersection, this.position, surfaces,ray.surface);
 		if(rootNumberOfShadowRays == 1)
-			return this.isHitByLight(ray.intersection, this.position, surfaces,ray.surface);
+			return this.mainRay;
 		
-		Vector tempX = Vector.crossProduct(lightDirection, this.v1);
+		Vector tempX = Vector.crossProduct(this.direction, this.v1);
 		if(tempX.x == 0 && tempX.y == 0 && tempX.z == 0)
-			tempX = Vector.crossProduct(lightDirection, this.v2);
+			tempX = Vector.crossProduct(this.direction, this.v2);
 		
-		Vector tempY = Vector.crossProduct(lightDirection, tempX);
+		Vector tempY = Vector.crossProduct(this.direction, tempX);
 		tempX = tempX.toUnitVector();
 		tempY = tempY.toUnitVector();
 		Vector mostLeftUp = this.position.add(tempX.scalarProduct(-this.radius/2)).add(tempY.scalarProduct(-this.radius/2));

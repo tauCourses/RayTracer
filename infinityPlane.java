@@ -18,7 +18,7 @@ public class infinityPlane extends AbstractSurface {
 	{
 		Vector temp = new Vector(ray.origin, p);
 		float sigma = Vector.dotProduct(temp, normal)/ Vector.dotProduct(ray.direction, this.normal);
-		if(sigma>0 && sigma<ray.d)
+		if(sigma>this.epsilon && sigma + this.epsilon<ray.d)
 		{
 			//System.out.println(sigma +" "+ ray.d);			
 			ray.d = sigma;

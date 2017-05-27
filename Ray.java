@@ -31,7 +31,7 @@ public class Ray {
 		this.origin = origin;
 		this.direction = direction.toUnitVector();
 		this.d = Float.MAX_VALUE;
-		this.toCam = this.direction.scalarProduct(-1);
+		this.toCam = this.direction.scalarProduct(-1f);
 	}
 
 }

@@ -20,7 +20,7 @@ public class Sphere extends AbstractSurface{
 		if(determinante>=0)
 		{		
 			float d = (float)((-b - Math.sqrt(determinante))/2);
-			if(d>0 && d< ray.d)
+			if(d>this.epsilon && d + this.epsilon < ray.d)
 			{
 				ray.d = d;
 				ray.surface = this;
