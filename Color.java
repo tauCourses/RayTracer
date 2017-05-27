@@ -31,8 +31,7 @@ public class Color {
 	
 	public Color multiply(Color c)
 	{
-		return new Color(this.red*c.red,this.green*c.green,this.blue*c.blue);
-
+		return new Color(this.red*c.red, this.green*c.green, this.blue*c.blue);
 	}
 	
 	public Color scalarProduct(float d)
