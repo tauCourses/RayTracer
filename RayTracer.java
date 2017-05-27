@@ -303,8 +303,10 @@ public class RayTracer {
 			//System.out.println(ray.surface.getDiffuseColor());
 			Color backGround = this.black;
 			if(ray.surface.getTransparency() > 0)
+			{
 				backGround = backGround.add(getBackGroundColor(ray,time+1).scalarProduct(ray.surface.getTransparency()));
-			
+			//	System.out.println(backGround + " " + ray.surface.getTransparency());
+			}
 			Color diffuzedAndSpecular = this.black;
 			for (Light light : this.lights)
 			{
@@ -315,7 +317,7 @@ public class RayTracer {
 					diffuzedAndSpecular = diffuzedAndSpecular.add(getSpecularColor(ray,light));
 				
 			}
-			diffuzedAndSpecular.scalarProduct(1-ray.surface.getTransparency());
+			diffuzedAndSpecular = diffuzedAndSpecular.scalarProduct(1-ray.surface.getTransparency());
 			return backGround.add(diffuzedAndSpecular).add(getReflectionColor(ray,time+1));
 		}
 		else
@@ -325,9 +327,9 @@ public class RayTracer {
 	private Color getBackGroundColor(Ray ray, int time)
 	{		
 		Ray newRay = new Ray();
-		float cos = Vector.dotProduct(ray.getNormal(), ray.direction);
+		//float cos = Vector.dotProduct(ray.getNormal(), ray.direction);
 		
-		newRay.setNewRay(ray.intersection.add(ray.direction),ray.direction);
+		newRay.setNewRay(ray.intersection,ray.direction);
 		
 		for(iSurface surface: surfaces)
 		{
@@ -337,20 +339,22 @@ public class RayTracer {
 		}
 		newRay.getIntersection();
 		
-		return getColorFromRay(newRay, time).scalarProduct(Math.abs(cos));
+		return getColorFromRay(newRay, time);
 	}
 	
 	private Color getDiffusedColor(Ray ray, Light light, float numOfLightHits) //need to be complete:
 	{	
 		if(Vector.dotProduct(ray.getNormal(), light.direction.getProjection(ray.getNormal())) >0)
 			return this.black;
-		float cos = Vector.dotProduct(ray.getNormal(), light.direction.scalarProduct(-1)); //they both unit vector so no need to divide by the length
+		
+		float cos = Vector.dotProduct(ray.getNormal(), light.direction); //they both unit vector so no need to divide by the length
 		
 		Color lightIntensity = ray.surface.getDiffuseColor().multiply(light.color);
+		
 		if (numOfLightHits == 0)
 			lightIntensity = lightIntensity.scalarProduct(1-light.shadowIntensity); 
 		else	
-				lightIntensity = lightIntensity.scalarProduct(numOfLightHits/this.squareNumberOfShadowRays);
+			lightIntensity = lightIntensity.scalarProduct((float)(numOfLightHits)/this.squareNumberOfShadowRays);
 		
 		
 		//System.out.println("a - " +resultDiffuseColor);
