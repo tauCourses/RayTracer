@@ -1,3 +1,4 @@
+import java.util.Random;
 
 public class Camara {
 	private Vector location;
@@ -10,7 +11,7 @@ public class Camara {
 	private int superSamplingLevel;
 	private int currentPosition = 0;
 	private int width;
-//	Random generatorRandomDoubles;
+	Random generatorRandoms;
 	
 	public Camara(Vector location, Vector lookAt, Vector up, float screenDistance, float screenWidth)
 	{
@@ -57,6 +58,7 @@ public class Camara {
 		this.mostLeftUp = this.mostLeftUp.add(this.inPixelHeightDirection.scalarProduct(0.5f));
 
 		this.superSamplingLevel = superSamplingLevel;
+		this.generatorRandoms = new Random();
 	}
 		
 		
@@ -68,7 +70,7 @@ public class Camara {
 		{
 			for(int p=0;p<this.superSamplingLevel;p++)
 			{
-				Vector inPixelPoint = pixelPoint.add(this.inPixelWidthDirection.scalarProduct((float)(p)).add(this.inPixelHeightDirection.scalarProduct((float)(k))));
+				Vector inPixelPoint = pixelPoint.add(this.inPixelWidthDirection.scalarProduct((float)(p)+generatorRandoms.nextFloat()).add(this.inPixelHeightDirection.scalarProduct((float)(k)+generatorRandoms.nextFloat())));
 				rays[t].setNewRay(inPixelPoint, new Vector(this.location, pixelPoint).toUnitVector());
 				t++;
 			}
