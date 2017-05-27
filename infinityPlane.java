@@ -25,5 +25,14 @@ public class infinityPlane extends AbstractSurface {
 			ray.surface = this;
 		}
 	}
+	public boolean inDistance(Ray ray, float min, float max)
+	{
+		Vector temp = new Vector(ray.origin, p);
+		float sigma = Vector.dotProduct(temp, normal)/ Vector.dotProduct(ray.direction, this.normal);
+		if(sigma>min + this.epsilon && sigma + this.epsilon< max)
+			return true;
+		return false;
+	}
+
 
 }

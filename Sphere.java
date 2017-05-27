@@ -27,5 +27,21 @@ public class Sphere extends AbstractSurface{
 			}
 		}
 	}
+	public boolean inDistance(Ray ray, float min, float max)
+	{
+		float a = ray.direction.getLengthSquare();
+		
+		float b = 2*(Vector.dotProduct(ray.direction, ray.origin.subtruct(this.center)));
+		float c = 	new Vector(ray.origin, this.center).getLengthSquare() - this.squaredRadius;
+		float determinante = b*b-4*a*c;
+		
+		if(determinante>=0)
+		{		
+			float d = (float)((-b - Math.sqrt(determinante))/2);
+			if(d>min + this.epsilon && d + this.epsilon < max)
+				return true;
+		}
+		return false;
+	}
 
 }

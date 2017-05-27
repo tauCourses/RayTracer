@@ -1,7 +1,7 @@
 
 public abstract class AbstractSurface implements iSurface{
 	private Material material;
-	static float epsilon = 0.0001f;
+	static float epsilon = 0.001f;
 	public AbstractSurface(Material material)
 	{
 		this.material = material;

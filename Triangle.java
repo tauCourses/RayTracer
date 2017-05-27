@@ -50,4 +50,29 @@ public class Triangle extends AbstractSurface{
 		ray.intersection = intersection;
 		
 	}
+	public boolean inDistance(Ray ray, float min, float max)
+	{
+		float temp = Vector.dotProduct(this.normal, ray.direction);
+		if(temp == 0)
+			return false;
+		float d = -(Vector.dotProduct(this.normal, ray.origin) - this.offset) / temp; 
+		if(d<=min + this.epsilon || d +  this.epsilon > max)
+			return false;
+		
+		Vector intersection = ray.origin.add(ray.direction.scalarProduct(d));
+		
+		Vector C0 = new Vector(this.first, intersection); 
+		if (Vector.dotProduct(C0,this.firstNormal) < 0)
+			return false;
+					
+		Vector C1 = new Vector(this.second, intersection); 
+		if (Vector.dotProduct(C1,this.secondNormal) < 0)
+			return false;
+		
+		Vector C2 = new Vector(this.third, intersection); 
+		if (Vector.dotProduct(C2,this.thirdNormal) < 0)
+			return false;
+		
+		return true;
+	}
 }

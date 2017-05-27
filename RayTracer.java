@@ -308,9 +308,10 @@ public class RayTracer {
 			Color diffuzedAndSpecular = this.black;
 			for (Light light : this.lights)
 			{
-				int numOfLightHits = light.numOfLightRaysHits(ray, this.surfaces, this.numberOfShadowRays);
+				float numOfLightHits = light.numOfLightRaysHits(ray, this.surfaces, this.numberOfShadowRays);
+				//System.out.println(numOfLightHits);
 				diffuzedAndSpecular = diffuzedAndSpecular.add(getDiffusedColor(ray,light, numOfLightHits));
-				if (light.mainRay == 1)
+				if (light.mainRay > 0.2)
 					diffuzedAndSpecular = diffuzedAndSpecular.add(getSpecularColor(ray,light));
 				
 			}
@@ -324,14 +325,14 @@ public class RayTracer {
 	private Color getBackGroundColor(Ray ray, int time)
 	{		
 		Ray newRay = new Ray();
-		float cos = Vector.dotProduct(ray.getNormal().scalarProduct(-1), ray.direction);
+		float cos = Vector.dotProduct(ray.getNormal(), ray.direction);
 		
 		newRay.setNewRay(ray.intersection.add(ray.direction),ray.direction);
 		
 		for(iSurface surface: surfaces)
 		{
-			//if(surface == ray.surface)
-				//continue;
+			if(surface == ray.surface)
+				continue;
 			surface.intersectes(newRay);
 		}
 		newRay.getIntersection();
@@ -339,16 +340,18 @@ public class RayTracer {
 		return getColorFromRay(newRay, time).scalarProduct(Math.abs(cos));
 	}
 	
-	private Color getDiffusedColor(Ray ray, Light light, int numOfLightHits) //need to be complete:
-	{
-		float cos = Vector.dotProduct(ray.getNormal(), light.direction); //they both unit vector so no need to divide by the length
+	private Color getDiffusedColor(Ray ray, Light light, float numOfLightHits) //need to be complete:
+	{	
+		if(Vector.dotProduct(ray.getNormal(), light.direction.getProjection(ray.getNormal())) >0)
+			return this.black;
+		float cos = Vector.dotProduct(ray.getNormal(), light.direction.scalarProduct(-1)); //they both unit vector so no need to divide by the length
 		
 		Color lightIntensity = ray.surface.getDiffuseColor().multiply(light.color);
-		
 		if (numOfLightHits == 0)
 			lightIntensity = lightIntensity.scalarProduct(1-light.shadowIntensity); 
 		else	
-			lightIntensity = lightIntensity.scalarProduct((float)(numOfLightHits)/this.squareNumberOfShadowRays);
+				lightIntensity = lightIntensity.scalarProduct(numOfLightHits/this.squareNumberOfShadowRays);
+		
 		
 		//System.out.println("a - " +resultDiffuseColor);
 		return lightIntensity.scalarProduct(Math.abs(cos));
@@ -363,8 +366,8 @@ public class RayTracer {
 		if(cos>0)
 		{
 			Color c = ray.surface.getSpecularColor().multiply(light.color).
-					scalarProduct((float)(Math.pow(cos, ray.surface.getPhong())));
-			return c.scalarProduct(light.specularIntensity);
+					scalarProduct((float)(Math.pow(cos, ray.surface.getPhong())*light.specularIntensity));
+			return c;
 		}
 		return this.black;
 	}
@@ -372,7 +375,7 @@ public class RayTracer {
 	private Color getReflectionColor(Ray ray, int time)
 	{
 		Vector b = ray.direction.getProjection(ray.getNormal()).scalarProduct(-2);
-		float cos = Vector.dotProduct(ray.getNormal(), ray.direction.add(b));
+		//float cos = Vector.dotProduct(ray.getNormal(), ray.direction.add(b));
 		
 		iSurface i = ray.surface;
 		ray.setNewRay(ray.intersection, ray.direction.add(b));
@@ -385,7 +388,7 @@ public class RayTracer {
 		}
 		ray.getIntersection();
 		
-		return getColorFromRay(ray,time).multiply(i.getReflectionColor()).scalarProduct(Math.abs(cos));
+		return getColorFromRay(ray,time).multiply(i.getReflectionColor());//.scalarProduct(Math.abs(cos));
 	}
 
 }
