@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -37,6 +37,7 @@ public class RayTracer {
 	private Color black;
 	//private Color white;
 	private ArrayList<Light> lights;
+	//private Random generatorRandoms;
 	/**
 	 * Runs the ray tracer. Takes scene file, output image file and image size as input.
 	 */
@@ -47,6 +48,7 @@ public class RayTracer {
 		this.materialList = new ArrayList<>();
 		this.surfacesTemp = new ArrayList<>();
 		this.lights = new ArrayList<>();
+		//this.generatorRandoms = new Random();
 	}
 	public static void main(String[] args) throws IOException, RayTracerException {
 		//try {

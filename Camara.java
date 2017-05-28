@@ -6,11 +6,11 @@ public class Camara {
 	
 	private float screenDistance, screenWidth, screenHeight;
 	private Vector mostLeftUp;
-	private Vector pixelWidthDirection, pixelHeightDirection, backToStart;
+	private Vector pixelWidthDirection, pixelHeightDirection	, backToStart;
 	private Vector inPixelWidthDirection, inPixelHeightDirection;
 	private int superSamplingLevel;
-	private int currentPosition = 0;
-	private int width;
+	//private int currentPosition = 0;
+	//private int width;
 	Random generatorRandoms;
 	
 	public Camara(Vector location, Vector lookAt, Vector up, float screenDistance, float screenWidth)
@@ -35,8 +35,11 @@ public class Camara {
 	public void createScreen(int x, int y, int superSamplingLevel)
 	{
 		//TODO - I THINK WE USE X AND Y NOT GOOD HERE!!!!
-		this.width = y;
-		this.screenHeight = this.screenWidth*y/x;  //TO CHECK!!!!
+		//this.width = y;
+		if (y < x) //TO CHECK!!!!
+			this.screenHeight = this.screenWidth*x/y; 
+		else
+			this.screenHeight = this.screenWidth*y/x; 
 		
 		Vector screenCenter = this.location.add(this.lookAt.scalarProduct(this.screenDistance));
 		
@@ -66,11 +69,15 @@ public class Camara {
 	{
 		int t=0;
 		Vector pixelPoint = this.mostLeftUp.add(this.pixelWidthDirection.scalarProduct((float)(j)).add(this.pixelHeightDirection.scalarProduct((float)(i))));
+		
+		float random = generatorRandoms.nextFloat();
 		for(int k=0;k<this.superSamplingLevel;k++)
 		{
 			for(int p=0;p<this.superSamplingLevel;p++)
 			{
-				Vector inPixelPoint = pixelPoint.add(this.inPixelWidthDirection.scalarProduct((float)(p)+generatorRandoms.nextFloat()).add(this.inPixelHeightDirection.scalarProduct((float)(k)+generatorRandoms.nextFloat())));
+				while (random < 0.6)
+					random = generatorRandoms.nextFloat();
+				Vector inPixelPoint = pixelPoint.add(this.inPixelWidthDirection.scalarProduct((float)(p)+random).add(this.inPixelHeightDirection.scalarProduct((float)(k)+random)));
 				rays[t].setNewRay(inPixelPoint, new Vector(this.location, pixelPoint).toUnitVector());
 				t++;
 			}

@@ -1,3 +1,4 @@
+import java.util.Random;
 
 public class Light {
 	Vector position;
@@ -10,6 +11,7 @@ public class Light {
 	int numberOfShadowRays;
 	Ray ray;
 	Vector v1,v2;
+	private Random generatorRandoms;
 	public float mainRay; //does the ray from the center hit the surface 
 	
 	public Light(Vector position, Color color,float specularIntensity, float shadowIntensity, float radius)
@@ -22,6 +24,7 @@ public class Light {
 		this.ray = new Ray();
 		v1 = new Vector(1,1,1);
 		v2 = new Vector(1,0,0);
+		this.generatorRandoms = new Random();
 	}
 	
 	public float isHitByLight(Vector intersection, Vector currentLightVector, iSurface[] surfaces, iSurface toIgnure)
@@ -65,10 +68,7 @@ public class Light {
 		for(int i=0;i<rootNumberOfShadowRays;i++)
 			for(int j=0;j<rootNumberOfShadowRays;j++)
 				numOfHits += this.isHitByLight(ray.intersection, 
-						mostLeftUp.add(tempX.scalarProduct(i)).add(tempY.scalarProduct(j)), surfaces,ray.surface);
-			
-		
-		
+						mostLeftUp.add(tempX.scalarProduct(i+generatorRandoms.nextFloat())).add(tempY.scalarProduct(j+generatorRandoms.nextFloat())), surfaces,ray.surface);
 		return numOfHits;
 	}
 	
